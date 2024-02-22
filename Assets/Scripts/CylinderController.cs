@@ -3,28 +3,35 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CylinderCreator : MonoBehaviour
+public class CylinderController: MonoBehaviour
 {
     public int number = 9;
     public TextMeshPro textMesh;
     public float rotTime = 0.5f;
 
     private Quaternion rotation;
-    private bool isRotating = false;
     private float elapsedTime = 0;
+    private float currentRotation = 0.0f;
+    private bool isRotating = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        //rotation = Quaternion.Euler(0, 0, 90);
         CreateCylinder();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //elapsedTime = Time.deltaTime;
-        //transform.rotation = Quaternion.Lerp(transform.rotation, rotation, elapsedTime / rotTime);
+        if (isRotating)
+        {
+            elapsedTime = Time.deltaTime;
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, elapsedTime / rotTime);
+            if (elapsedTime >= rotTime)
+            {
+                isRotating = false;
+            }
+        }
     }
 
     private void CreateCylinder()
@@ -44,13 +51,13 @@ public class CylinderCreator : MonoBehaviour
         }
     }
 
+    [PunRPC]
     public void MoveCylinder()
     {
-        if (!isRotating)
-        {
-            rotation = Quaternion.Euler(transform.rotation.x + 360 / number, 0, transform.rotation.z);
-            isRotating = true;
-            elapsedTime = 0;
-        }
+        currentRotation += 360 / number;
+        currentRotation %= 360;
+        rotation = Quaternion.Euler(currentRotation, 0, 90);
+        elapsedTime = 0;
+        isRotating = true;
     }
 }

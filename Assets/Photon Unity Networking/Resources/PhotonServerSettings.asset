@@ -49,4 +49,5 @@ MonoBehaviour:
   - DropDownObject
   - UpdateSetObject
   - SetDownObject
+  - MoveCylinder
   DisableAutoOpenWizard: 1

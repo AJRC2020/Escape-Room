@@ -65,7 +65,7 @@ public class AssociationController : MonoBehaviour
 
         heldObjRB.transform.parent = HoldArea;
 
-        heldObjView.RPC("SetUpObject", PhotonTargets.Others, HoldArea.position, scaleFactor);
+        heldObjView.RPC("SetUpObject", PhotonTargets.OthersBuffered, HoldArea.position, scaleFactor);
     }
 
     private void CheckChild()

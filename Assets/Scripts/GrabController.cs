@@ -29,14 +29,16 @@ public class GrabController : MonoBehaviour
                     GameObject gameObject = hit.transform.gameObject;
                     photonView = gameObject.GetComponent<PhotonView>();
 
-                    if (photonView.isMine) 
+                    if (photonView != null)
                     {
-                        PickupObject(hit.transform.gameObject);
-                    }
-                    else if (hit.transform.gameObject.layer == 3)
-                    {
-                        photonView.TransferOwnership(PhotonNetwork.player);
-                        PickupObject(hit.transform.gameObject);
+                        if (photonView.isMine)
+                        {
+                            HandleObject(hit.transform.gameObject, false);
+                        }
+                        else
+                        {
+                            HandleObject(hit.transform.gameObject, true);
+                        }
                     }
                 }
             }
@@ -73,23 +75,46 @@ public class GrabController : MonoBehaviour
         }
     }
 
-    private void PickupObject(GameObject pickObj)
+    private void HandleObject(GameObject gameObject, bool change)
     {
-        if (pickObj.GetComponent<Rigidbody>() != null) 
+        if (gameObject.GetComponent<Rigidbody>() != null && gameObject.layer == 3)
         {
-            heldObjRB = pickObj.GetComponent<Rigidbody>();
-            heldObjRB.useGravity = false;
-            heldObjRB.drag = 10;
-            pickObj.layer = 0;
-            heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
-
-            heldObjRB.transform.parent = HoldArea;
-            heldObj = pickObj;
-            heldObj.GetComponent<PhotonView>().enabled = false;
-
-            photonView.RPC("SetUpObject", PhotonTargets.Others);
+            if (change)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            PickupObject(gameObject);
+        }
+        if (gameObject.GetComponent<CylinderController>() != null) 
+        {
+            if (change) 
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            TurnObject(gameObject);
         }
     }
+
+    private void PickupObject(GameObject pickObj)
+    {
+        heldObjRB = pickObj.GetComponent<Rigidbody>();
+        heldObjRB.useGravity = false;
+        heldObjRB.drag = 10;
+        pickObj.layer = 0;
+        heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
+
+        heldObjRB.transform.parent = HoldArea;
+        heldObj = pickObj;
+        heldObj.GetComponent<PhotonView>().enabled = false;
+
+        photonView.RPC("SetUpObject", PhotonTargets.OthersBuffered);
+    }
+
+    private void TurnObject(GameObject turnObj)
+    {
+        //turnObj.GetComponent<CylinderController>().MoveCylinder();
+        photonView.RPC("MoveCylinder", PhotonTargets.AllBuffered);
+    } 
 
     private void DropObject()
     {
@@ -102,7 +127,7 @@ public class GrabController : MonoBehaviour
         heldObjRB.transform.parent = null;
         heldObj = null;
 
-        photonView.RPC("DropDownObject", PhotonTargets.Others);
+        photonView.RPC("DropDownObject", PhotonTargets.OthersBuffered);
     }
 
     private void RotateObject()
