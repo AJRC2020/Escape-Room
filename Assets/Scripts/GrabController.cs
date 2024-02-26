@@ -27,19 +27,7 @@ public class GrabController : MonoBehaviour
                 if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickupRange))
                 {
                     GameObject gameObject = hit.transform.gameObject;
-                    photonView = gameObject.GetComponent<PhotonView>();
-
-                    if (photonView != null)
-                    {
-                        if (photonView.isMine)
-                        {
-                            HandleObject(hit.transform.gameObject, false);
-                        }
-                        else
-                        {
-                            HandleObject(hit.transform.gameObject, true);
-                        }
-                    }
+                    HandleObject(gameObject);
                 }
             }
             else
@@ -75,11 +63,12 @@ public class GrabController : MonoBehaviour
         }
     }
 
-    private void HandleObject(GameObject gameObject, bool change)
+    private void HandleObject(GameObject gameObject)
     {
         if (gameObject.GetComponent<Rigidbody>() != null && gameObject.layer == 3)
         {
-            if (change)
+            photonView = gameObject.GetComponent<PhotonView>();
+            if (!photonView.isMine)
             {
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
@@ -87,7 +76,8 @@ public class GrabController : MonoBehaviour
         }
         if (gameObject.GetComponent<CylinderController>() != null) 
         {
-            if (change) 
+            photonView = gameObject.GetComponentInParent<PhotonView>();
+            if (!photonView.isMine)
             {
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
@@ -113,7 +103,8 @@ public class GrabController : MonoBehaviour
     private void TurnObject(GameObject turnObj)
     {
         //turnObj.GetComponent<CylinderController>().MoveCylinder();
-        photonView.RPC("MoveCylinder", PhotonTargets.AllBuffered);
+        int index = turnObj.transform.GetSiblingIndex() - 1;
+        photonView.RPC("MoveCylinder", PhotonTargets.AllBuffered, index);
     } 
 
     private void DropObject()
