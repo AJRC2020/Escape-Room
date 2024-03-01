@@ -50,4 +50,5 @@ MonoBehaviour:
   - UpdateSetObject
   - SetDownObject
   - MoveCylinder
+  - Decrease
   DisableAutoOpenWizard: 1
