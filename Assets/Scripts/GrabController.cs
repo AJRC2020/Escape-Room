@@ -1,4 +1,5 @@
 using ExitGames.Client.Photon.StructWrapping;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,11 +12,13 @@ public class GrabController : MonoBehaviour
     private PhotonView photonView;
     private GameObject heldObj;
     private Rigidbody heldObjRB;
+    private GameObject heldDownObj;
 
     private float pickupRange = 5.0f;
     private float pickupForce = 150.0f;
     private float senX = 800.0f;
     private float senY = 800.0f;
+    private bool mouseDown = false;
 
     private void Update()
     {
@@ -33,6 +36,19 @@ public class GrabController : MonoBehaviour
             else
             {
                 DropObject();
+            }
+        }
+
+        if (mouseDown) 
+        { 
+            if (Input.GetMouseButtonUp(0))
+            {
+                UnrotateLock();
+            }
+            else
+            {
+                //photonView.RPC("Pressed", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
+                heldDownObj.GetComponent<ButtonLockController>().Pressed(photonView);
             }
         }
 
@@ -83,6 +99,15 @@ public class GrabController : MonoBehaviour
             }
             TurnObject(gameObject);
         }
+        if (gameObject.GetComponent<ButtonLockController>() != null)
+        {
+            photonView = gameObject.GetComponentInParent<PhotonView>();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            RotateLock(gameObject);
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -105,7 +130,21 @@ public class GrabController : MonoBehaviour
         //turnObj.GetComponent<CylinderController>().MoveCylinder();
         int index = turnObj.transform.GetSiblingIndex() - 1;
         photonView.RPC("MoveCylinder", PhotonTargets.AllBuffered, index);
-    } 
+    }
+    
+    private void RotateLock(GameObject buttonObj)
+    {
+        mouseDown = true;
+        heldDownObj = buttonObj;
+    }
+
+    private void UnrotateLock()
+    {
+        mouseDown = false;
+        photonView.RPC("Stopped", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
+        //heldDownObj.GetComponent<ButtonLockController>().Stopped();
+        heldDownObj = null;
+    }
 
     private void DropObject()
     {

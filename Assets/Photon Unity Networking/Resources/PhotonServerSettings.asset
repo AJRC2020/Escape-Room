@@ -51,4 +51,6 @@ MonoBehaviour:
   - SetDownObject
   - MoveCylinder
   - Decrease
+  - Pressed
+  - Stopped
   DisableAutoOpenWizard: 1

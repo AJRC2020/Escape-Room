@@ -52,6 +52,5 @@ public class TimerController : MonoBehaviour
         digitsList[1].text = (duration / 60 % 10).ToString();
         digitsList[2].text = (duration % 60 / 10).ToString();
         digitsList[3].text = (duration % 60 % 10).ToString();
-        Debug.Log("Duration = " + duration);
     }
 }

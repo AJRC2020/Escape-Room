@@ -506,7 +506,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   photonView: {fileID: 7551296667040904446}
   playerBody: {fileID: 4891668758700721668}
-  HoldArea: {fileID: 6356387211754160531}
   senX: 400
   senY: 400
 --- !u!114 &8161151776822112066
@@ -523,10 +522,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HoldArea: {fileID: 6356387211754160531}
   cameraController: {fileID: 1720781119844765085}
-  pickupRange: 5
-  pickupForce: 150
-  senX: 800
-  senY: 800
 --- !u!1 &4828426595438699683
 GameObject:
   m_ObjectHideFlags: 0
