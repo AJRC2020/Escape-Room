@@ -8,6 +8,7 @@ public class GrabController : MonoBehaviour
 {
     public Transform HoldArea;
     public CameraPlayerController cameraController;
+    public float forceIntensity = 5.0f;
 
     private PhotonView photonView;
     private GameObject heldObj;
@@ -35,7 +36,7 @@ public class GrabController : MonoBehaviour
             }
             else
             {
-                DropObject();
+                DropObject(false);
             }
         }
 
@@ -56,9 +57,15 @@ public class GrabController : MonoBehaviour
         {
             MoveObject();
 
+            Debug.Log("Held object position: " + heldObj.transform.position);
+
             if (Input.GetMouseButton(1))
             {
                 RotateObject();
+            }
+            else if (Input.GetMouseButtonDown(2))
+            {
+                DropObject(true);
             }
             else
             {
@@ -146,7 +153,7 @@ public class GrabController : MonoBehaviour
         heldDownObj = null;
     }
 
-    private void DropObject()
+    private void DropObject(bool isThrow)
     {
         heldObjRB.useGravity = true;
         heldObjRB.drag = 1;
@@ -155,6 +162,13 @@ public class GrabController : MonoBehaviour
 
         heldObj.GetComponent<PhotonView>().enabled = true;
         heldObjRB.transform.parent = null;
+
+        if (isThrow)
+        {
+            Vector3 force = heldObj.transform.position - transform.position;
+            heldObjRB.AddForce(force * forceIntensity, ForceMode.Impulse);
+        }
+
         heldObj = null;
 
         photonView.RPC("DropDownObject", PhotonTargets.OthersBuffered);
