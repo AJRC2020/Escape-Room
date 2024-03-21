@@ -57,8 +57,6 @@ public class GrabController : MonoBehaviour
         {
             MoveObject();
 
-            Debug.Log("Held object position: " + heldObj.transform.position);
-
             if (Input.GetMouseButton(1))
             {
                 RotateObject();

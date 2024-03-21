@@ -50,7 +50,7 @@ public class LockController : MonoBehaviour
         cylinderList[index].MoveCylinder();
     }
 
-    private bool VerifySolution()
+    public bool VerifySolution()
     {
         foreach (CylinderController cylinder in cylinderList)
         {

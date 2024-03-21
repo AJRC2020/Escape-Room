@@ -96,13 +96,11 @@ public class RotaryLockController : MonoBehaviour
                 currentIndex++;
                 objectiveLeft = !objectiveLeft;
                 isCounting = false;
-                Debug.Log("Got number " + currentIndex.ToString());
             }
             else if (isCounting)
             {
                 currentIndex = 0;
                 objectiveLeft = true;
-                Debug.Log("Lock Resetted");
             }
         }
     }
