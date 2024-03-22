@@ -10,9 +10,9 @@ public class RotaryLockController : MonoBehaviour
     public float rotationSpeed = 10.0f;
     public bool isMoving = false;
     public bool isCounting = true;
+    public List<TextMeshPro> digitsList = new List<TextMeshPro>();
 
     private float currentRotation = 0;
-    private List<TextMeshPro> digitsList = new List<TextMeshPro>();
     private int currentIndex = 0;
     private bool currentLeft = true;
     private bool objectiveLeft = true;
@@ -20,9 +20,7 @@ public class RotaryLockController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        digitsList.Add(GameObject.Find("Hundreds").GetComponent<TextMeshPro>());
-        digitsList.Add(GameObject.Find("Dozens").GetComponent<TextMeshPro>());
-        digitsList.Add(GameObject.Find("Units").GetComponent<TextMeshPro>());
+
     }
 
     // Update is called once per frame
@@ -64,6 +62,11 @@ public class RotaryLockController : MonoBehaviour
         currentRotation = newRotation;
         currentLeft = isLeft;
         isMoving = true;
+    }
+
+    public int GetCurrentIndex()
+    {
+        return currentIndex;
     }
 
     private void UpdateScreen()
