@@ -31,8 +31,8 @@ public class GrabbableObjectController : MonoBehaviour
         gameObject.layer = 0;
 
         transform.rotation = Quaternion.identity;
-        transform.position = pos + Vector3.up * 0.5f;
-        transform.localScale = Vector3.one * scaleFactor;
+        transform.position = pos;
+        //transform.localScale = Vector3.one * scaleFactor;
         heldObjRB.constraints = RigidbodyConstraints.FreezePosition;
         heldObjRB.transform.parent = GetComponent<AssociationController>().HoldArea;
     }

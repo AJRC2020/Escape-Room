@@ -9,6 +9,7 @@ public class GrabController : MonoBehaviour
     public Transform HoldArea;
     public CameraPlayerController cameraController;
     public float forceIntensity = 5.0f;
+    public float zoomSpeed = 1.0f;
 
     private PhotonView photonView;
     private GameObject heldObj;
@@ -56,6 +57,7 @@ public class GrabController : MonoBehaviour
         if (heldObj != null)
         {
             MoveObject();
+            ZoomObject();
 
             if (Input.GetMouseButton(1))
             {
@@ -113,6 +115,15 @@ public class GrabController : MonoBehaviour
             }
             RotateLock(gameObject);
         }
+        if (gameObject.GetComponent<ScaleController>() != null)
+        {
+            photonView = gameObject.GetComponentInParent<PhotonView>();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            TakeOutObject(gameObject);
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -151,6 +162,16 @@ public class GrabController : MonoBehaviour
         heldDownObj = null;
     }
 
+    private void TakeOutObject(GameObject scaleObj)
+    {
+        GameObject obj = scaleObj.GetComponent<ScaleController>().GetHeldObject();
+
+        if (obj != null)
+        {
+            PickupObject(obj);
+        }
+    }
+
     private void DropObject(bool isThrow)
     {
         heldObjRB.useGravity = true;
@@ -169,6 +190,8 @@ public class GrabController : MonoBehaviour
 
         heldObj = null;
 
+        HoldArea.localPosition = new Vector3(0, 0.5f, 3.5f);
+
         photonView.RPC("DropDownObject", PhotonTargets.OthersBuffered);
     }
 
@@ -182,5 +205,25 @@ public class GrabController : MonoBehaviour
 
         heldObj.transform.Rotate(Vector3.down, mouseX);
         heldObj.transform.Rotate(Vector3.right, mouseY);
+    }
+
+    private void ZoomObject()
+    {
+        float wheel = Input.GetAxis("Mouse ScrollWheel");
+
+        if (wheel > 0)
+        {
+            float z = HoldArea.localPosition.z + zoomSpeed * Time.deltaTime;
+            float y = z / 7f;
+
+            HoldArea.localPosition = new Vector3(0, y, z);
+        }
+        else if (wheel < 0)
+        {
+            float z = HoldArea.localPosition.z - zoomSpeed * Time.deltaTime;
+            float y = z / 7f;
+
+            HoldArea.localPosition = new Vector3(0, y, z);
+        }
     }
 }
