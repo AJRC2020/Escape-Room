@@ -70,8 +70,6 @@ public class ScaleController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("There is collision: " + collision.gameObject.name);
-
         if (collision.gameObject.tag == "Food" && collision.gameObject.layer == 3 && allowCollision)
         {
             SetObject(collision.gameObject);

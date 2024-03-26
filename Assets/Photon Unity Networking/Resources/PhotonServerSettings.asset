@@ -53,4 +53,6 @@ MonoBehaviour:
   - Decrease
   - Pressed
   - Stopped
+  - ChangeDoor
+  - ChangeMove
   DisableAutoOpenWizard: 1

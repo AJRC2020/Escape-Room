@@ -124,6 +124,25 @@ public class GrabController : MonoBehaviour
             }
             TakeOutObject(gameObject);
         }
+        if (gameObject.GetComponentInParent<CounterDoorController>() != null)
+        {
+            photonView = gameObject.GetComponentInParent<PhotonView>();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            OpenCounterDoor();
+        }
+
+        if (gameObject.GetComponent<MoveObjectController>() != null)
+        {
+            photonView = gameObject.GetComponent<PhotonView>();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            MoveStaticObject();
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -170,6 +189,16 @@ public class GrabController : MonoBehaviour
         {
             PickupObject(obj);
         }
+    }
+
+    private void OpenCounterDoor()
+    {
+        photonView.RPC("ChangeDoor", PhotonTargets.AllBuffered);
+    }
+
+    private void MoveStaticObject()
+    {
+        photonView.RPC("ChangeMove", PhotonTargets.AllBuffered);
     }
 
     private void DropObject(bool isThrow)
