@@ -73,7 +73,7 @@ public class GrabController : MonoBehaviour
                 cameraController.enabled = true;
             }
 
-            photonView.RPC("UpdateGrabbedObject", PhotonTargets.Others, heldObj.transform.position, heldObj.transform.rotation);
+            photonView.RPC("UpdateGrabbedObject", PhotonTargets.OthersBuffered, heldObj.transform.position, heldObj.transform.rotation);
         }
     }
 
@@ -187,6 +187,14 @@ public class GrabController : MonoBehaviour
 
         if (obj != null)
         {
+            photonView.RPC("GetObjectOut", PhotonTargets.OthersBuffered);
+
+            photonView = obj.GetComponent<PhotonView>();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+
             PickupObject(obj);
         }
     }

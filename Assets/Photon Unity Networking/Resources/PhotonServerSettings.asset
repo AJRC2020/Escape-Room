@@ -55,4 +55,5 @@ MonoBehaviour:
   - Stopped
   - ChangeDoor
   - ChangeMove
+  - GetObjectOut
   DisableAutoOpenWizard: 1

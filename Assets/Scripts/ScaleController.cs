@@ -37,10 +37,6 @@ public class ScaleController : MonoBehaviour
         {
             childTrans.position = Vector3.Lerp(originalPos, finalPos, 4 * currentTime);
             currentTime += Time.deltaTime;
-            if (currentTime > 0.25f)
-            {
-                heldObjRB.gameObject.layer = 3;
-            }
         }
         else
         {
@@ -58,6 +54,8 @@ public class ScaleController : MonoBehaviour
         if (heldObjRB != null)
         {
             GameObject retObj = heldObjRB.gameObject;
+            retObj.transform.localScale /= scaleFactor;
+            heldObjRB.constraints = RigidbodyConstraints.None;
             heldObjRB = null;
             enableDigits.SetActive(false);
             return retObj;
@@ -68,9 +66,20 @@ public class ScaleController : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    public void GetObjectOut()
+    {
+        GameObject retObj = heldObjRB.gameObject;
+        retObj.transform.localScale /= scaleFactor;
+        heldObjRB.constraints = RigidbodyConstraints.None;
+        heldObjRB = null;
+        enableDigits.SetActive(false);
+        retObj.transform.parent = null;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Food" && collision.gameObject.layer == 3 && allowCollision)
+        if (collision.gameObject.tag == "Food" && collision.gameObject.layer == 3 && allowCollision && heldObjRB == null)
         {
             SetObject(collision.gameObject);
         }
@@ -81,6 +90,7 @@ public class ScaleController : MonoBehaviour
         obj.layer = 0;
         obj.transform.rotation = Quaternion.identity;
         obj.transform.position = HoldArea.position;
+        obj.transform.localScale *= scaleFactor;
 
         heldObjRB = obj.GetComponent<Rigidbody>();
         heldObjRB.useGravity = false;
