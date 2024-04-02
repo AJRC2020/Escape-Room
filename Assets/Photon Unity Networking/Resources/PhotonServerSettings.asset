@@ -56,4 +56,6 @@ MonoBehaviour:
   - ChangeDoor
   - ChangeMove
   - GetObjectOut
+  - Draw
+  - StopDrawing
   DisableAutoOpenWizard: 1

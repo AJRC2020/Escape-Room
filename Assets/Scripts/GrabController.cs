@@ -43,14 +43,44 @@ public class GrabController : MonoBehaviour
 
         if (mouseDown) 
         { 
-            if (Input.GetMouseButtonUp(0))
+            if (heldDownObj.GetComponent<ButtonLockController>() != null)
             {
-                UnrotateLock();
+                if (Input.GetMouseButtonUp(0))
+                {
+                    UnrotateLock();
+                }
+                else
+                {
+                    //photonView.RPC("Pressed", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
+                    heldDownObj.GetComponent<ButtonLockController>().Pressed(photonView);
+                }
             }
-            else
+
+            if (heldDownObj.GetComponent<BoardController>() != null)
             {
-                //photonView.RPC("Pressed", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
-                heldDownObj.GetComponent<ButtonLockController>().Pressed(photonView);
+                if (Input.GetMouseButtonUp(0))
+                {
+                    StopDrawingObject();
+                }
+                else
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickupRange))
+                    {
+                        GameObject gameObject = hit.transform.gameObject;
+
+                        if (gameObject.GetComponent<BoardController>() != null)
+                        {
+                            Vector3 point = hit.point;
+                            point.z = -0.01f;
+                            photonView.RPC("Draw", PhotonTargets.AllBuffered, point);
+                        }
+                    }
+                    else
+                    {
+                        StopDrawingObject();
+                    }
+                }
             }
         }
 
@@ -143,6 +173,16 @@ public class GrabController : MonoBehaviour
             }
             MoveStaticObject();
         }
+
+        if (gameObject.GetComponent<BoardController>() != null)
+        {
+            photonView = gameObject.GetComponent<PhotonView>();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            DrawObject(gameObject);
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -178,6 +218,27 @@ public class GrabController : MonoBehaviour
         mouseDown = false;
         photonView.RPC("Stopped", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
         //heldDownObj.GetComponent<ButtonLockController>().Stopped();
+        heldDownObj = null;
+    }
+
+    private void DrawObject(GameObject drawObj)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickupRange))
+        {
+            mouseDown = true;
+            heldDownObj = drawObj;
+            Vector3 point = hit.point;
+            point.z = -0.01f;
+            photonView.RPC("Draw", PhotonTargets.AllBuffered, point);
+        }
+
+    }
+
+    private void StopDrawingObject()
+    {
+        mouseDown = false;
+        photonView.RPC("StopDrawing", PhotonTargets.AllBuffered);
         heldDownObj = null;
     }
 

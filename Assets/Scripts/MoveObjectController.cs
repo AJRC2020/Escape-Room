@@ -41,7 +41,6 @@ public class MoveObjectController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Current position: " + transform.position);
         MoveObject();   
     }
 
@@ -63,17 +62,14 @@ public class MoveObjectController : MonoBehaviour
         switch(axis)
         {
             case 0:
-                Debug.Log("Got here 0");
                 movement = Vector3.right * moveSpeed * Time.deltaTime;
                 break;
 
             case 1:
-                Debug.Log("Got here 1");
                 movement = Vector3.up * moveSpeed * Time.deltaTime; 
                 break;
 
             case 2:
-                Debug.Log("Got here 2");
                 movement = Vector3.forward * moveSpeed * Time.deltaTime;
                 break;
         }
