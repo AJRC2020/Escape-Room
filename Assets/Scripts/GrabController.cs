@@ -88,6 +88,7 @@ public class GrabController : MonoBehaviour
         {
             MoveObject();
             ZoomObject();
+            ChangePageBook();
 
             if (Input.GetMouseButton(1))
             {
@@ -322,6 +323,21 @@ public class GrabController : MonoBehaviour
             float y = z / 7f;
 
             HoldArea.localPosition = new Vector3(0, y, z);
+        }
+    }
+
+    private void ChangePageBook()
+    {
+        if (heldObj.GetComponent<BookController>() != null)
+        {
+            if (Input.GetKeyDown(KeyCode.E)) 
+            {
+                photonView.RPC("CanMove", PhotonTargets.AllBuffered, true);
+            }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                photonView.RPC("CanMove", PhotonTargets.AllBuffered, false);
+            }
         }
     }
 }
