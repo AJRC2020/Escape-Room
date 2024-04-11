@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Cylinder
   - Food
+  - Card
+  - Key
   layers:
   - Default
   - TransparentFX

@@ -72,7 +72,7 @@ public class GrabController : MonoBehaviour
                         if (gameObject.GetComponent<BoardController>() != null)
                         {
                             Vector3 point = hit.point;
-                            point.z = -0.01f;
+                            point.x = gameObject.transform.position.x - 0.01f;
                             photonView.RPC("Draw", PhotonTargets.AllBuffered, point);
                         }
                     }
@@ -184,6 +184,33 @@ public class GrabController : MonoBehaviour
             }
             DrawObject(gameObject);
         }
+
+        if (gameObject.GetComponent<HintCardSpawner>() != null)
+        {
+            gameObject.GetComponent<HintCardSpawner>().Spawn();
+        }
+
+        if (gameObject.GetComponent<BookShelfButtonController>() != null)
+        {
+            photonView = gameObject.GetComponent<BookShelfButtonController>().GetPhotonView();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            MoveStaticObject();
+        }
+
+        if (gameObject.tag == "Key")
+        {
+            photonView = gameObject.GetComponent<PhotonView>();
+            
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -230,7 +257,7 @@ public class GrabController : MonoBehaviour
             mouseDown = true;
             heldDownObj = drawObj;
             Vector3 point = hit.point;
-            point.z = -0.01f;
+            point.x = drawObj.transform.position.x - 0.01f;
             photonView.RPC("Draw", PhotonTargets.AllBuffered, point);
         }
 

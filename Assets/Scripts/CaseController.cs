@@ -10,6 +10,7 @@ public class CaseController : MonoBehaviour
     
     private bool startRotation = false;
     private Transform childTrans;
+    private float totalRotation = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +26,8 @@ public class CaseController : MonoBehaviour
             if (locker.GetComponent<LockController>().VerifySolution()) 
             {
                 startRotation = true;
-                PhotonView photonView  = locker.GetComponent<PhotonView>();
-                if (photonView.isMine)
+                PhotonView photonViewLocker  = locker.GetComponent<PhotonView>();
+                if (photonViewLocker.isMine)
                 {
                     PhotonNetwork.Destroy(locker);
                 }
@@ -36,6 +37,7 @@ public class CaseController : MonoBehaviour
         if (startRotation)
         {
             childTrans.Rotate(Vector3.right, rotationSpeed * Time.deltaTime, Space.Self);
+            totalRotation += rotationSpeed * Time.deltaTime;
             float angle = childTrans.localEulerAngles.x * Mathf.Deg2Rad;
             float y = 0.125f * Mathf.Cos(angle) + 0.375f * Mathf.Sin(angle) + 0.125f;
             float z = 0.125f * Mathf.Sin(angle) - 0.375f * Mathf.Cos(angle) + 0.375f;
@@ -47,6 +49,8 @@ public class CaseController : MonoBehaviour
 
     private void Check()
     {
-        startRotation = childTrans.localEulerAngles.x < 90f;
+        startRotation = totalRotation < 90f;
+        Debug.Log("Spin = " + totalRotation);
+        Debug.Log("Speed = " + rotationSpeed);
     }
 }

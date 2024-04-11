@@ -16,6 +16,8 @@ public class PlayerController : Photon.MonoBehaviour
 
     private float x;
     private float z;
+    private float gravity = -9.81f;
+    private Vector3 velocity = Vector3.zero;
 
     private void Awake()
     {
@@ -26,7 +28,7 @@ public class PlayerController : Photon.MonoBehaviour
         }
         else
         {
-            PlayerNameText.text = photonView.owner.name;
+            PlayerNameText.text = photonView.owner.NickName;
         }
     }
 
@@ -43,8 +45,15 @@ public class PlayerController : Photon.MonoBehaviour
         x = Input.GetAxisRaw("Horizontal");
         z = Input.GetAxisRaw("Vertical");
 
-        Vector3 moveDir = transform.right * x + transform.forward * z;
+        velocity.y += gravity * Time.deltaTime;
+
+        Vector3 moveDir = transform.right * x + transform.forward * z + velocity;
 
         controller.Move(moveDir * MoveSpeed * Time.deltaTime);
+
+        if (controller.isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
     }
 }

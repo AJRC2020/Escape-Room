@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class BookController : MonoBehaviour
 {
     public float rotationSpeed = 10.0f;
+    public GameObject locker;
+    public bool isUsingLocker = true;
 
     private Transform currentRotating;
     private bool rotPos = true;
@@ -13,12 +14,14 @@ public class BookController : MonoBehaviour
     private bool canMove = false;
     private bool cantMoveRight = false;
     private bool cantMoveLeft = true;
+    private bool notLocked = false;
 
     // Start is called before the first frame update
     void Start()
     {
         currentRotating = transform.GetChild(0);
         ActivatePages();
+        notLocked = !isUsingLocker;
     }
 
     // Update is called once per frame
@@ -30,41 +33,49 @@ public class BookController : MonoBehaviour
             Check();
         }
 
+        if (!notLocked && isUsingLocker)
+        {
+            CheckLocker();
+        }
+
         ActivatePages();
     }
 
     [PunRPC]
     public void CanMove(bool isPos)
     {
-        if (!canMove)
+        if (notLocked)
         {
-            if (isPos && !rotPos && !cantMoveRight)
+            if (!canMove)
             {
-                if (!cantMoveLeft)
+                if (isPos && !rotPos && !cantMoveRight)
                 {
-                    currentIndex++;
-                    currentRotating = transform.GetChild(currentIndex);
+                    if (!cantMoveLeft)
+                    {
+                        currentIndex++;
+                        currentRotating = transform.GetChild(currentIndex);
+                    }
+                    rotationSpeed *= -1;
+                    rotPos = true;
                 }
-                rotationSpeed *= -1;
-                rotPos = true;
-            }
 
-            if (!isPos && rotPos && !cantMoveLeft)
-            {
-                if (!cantMoveRight)
+                if (!isPos && rotPos && !cantMoveLeft)
                 {
-                    currentIndex--;
-                    currentRotating = transform.GetChild(currentIndex);
+                    if (!cantMoveRight)
+                    {
+                        currentIndex--;
+                        currentRotating = transform.GetChild(currentIndex);
+                    }
+                    rotationSpeed *= -1;
+                    rotPos = false;
                 }
-                rotationSpeed *= -1;
-                rotPos = false;
-            }
 
-            if (!(cantMoveLeft && !isPos || cantMoveRight && isPos))
-            {
-                cantMoveLeft = false;
-                cantMoveRight = false;
-                canMove = true;
+                if (!(cantMoveLeft && !isPos || cantMoveRight && isPos))
+                {
+                    cantMoveLeft = false;
+                    cantMoveRight = false;
+                    canMove = true;
+                }
             }
         }
     }
@@ -199,6 +210,15 @@ public class BookController : MonoBehaviour
                 transform.GetChild(3).gameObject.SetActive(false);
                 transform.GetChild(4).gameObject.SetActive(true);
                 break;
+        }
+    }
+
+    private void CheckLocker()
+    {
+        if (locker == null)
+        {
+            notLocked = true;
+            Destroy(transform.GetChild(transform.childCount - 1).gameObject);
         }
     }
 }

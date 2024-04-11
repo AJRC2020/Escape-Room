@@ -59,4 +59,5 @@ MonoBehaviour:
   - Draw
   - StopDrawing
   - CanMove
+  - DropObject
   DisableAutoOpenWizard: 1

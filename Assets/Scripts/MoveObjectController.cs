@@ -7,6 +7,7 @@ public class MoveObjectController : MonoBehaviour
     public float moveDistance = 1;
     public float moveSpeed = 10f;
     public int axis = 0;
+    public bool useWorld = false;
 
     private bool moveTo = false;
     private float originalPos;
@@ -76,11 +77,25 @@ public class MoveObjectController : MonoBehaviour
 
         if (moveTo)
         {
-            transform.Translate(movement, Space.World);
+            if (useWorld)
+            {
+                transform.Translate(movement, Space.World);
+            }
+            else
+            {
+                transform.Translate(movement, Space.Self);
+            }
         }
         else
         {
-            transform.Translate(-movement, Space.World);
+            if (useWorld)
+            {
+                transform.Translate(-movement, Space.World);
+            }
+            else
+            {
+                transform.Translate(-movement, Space.Self);
+            }
         }
     }
 
@@ -93,31 +108,79 @@ public class MoveObjectController : MonoBehaviour
                 case 0:
                     if (moveDistance > 0)
                     {
-                        return transform.localPosition.x >= finalPos;
+                        if (transform.localPosition.x >= finalPos)
+                        {
+                            transform.localPosition = new Vector3(finalPos, transform.localPosition.y, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
-                        return transform.localPosition.x <= finalPos;
+                        if (transform.localPosition.x <= finalPos)
+                        {
+                            transform.localPosition = new Vector3(finalPos, transform.localPosition.y, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
 
                 case 1:
                     if (moveDistance > 0)
                     {
-                        return transform.localPosition.y >= finalPos;
+                        if (transform.localPosition.y >= finalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, finalPos, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
-                        return transform.localPosition.y <= finalPos;
+                        if (transform.localPosition.y <= finalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, finalPos, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
 
                 case 2:
                     if (moveDistance > 0)
                     {
-                        return transform.localPosition.z >= finalPos;
+                        if (transform.localPosition.z >= finalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, finalPos);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
-                        return transform.localPosition.z <= finalPos;
+                        if (transform.localPosition.z <= finalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, finalPos);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
 
                 default:
@@ -131,31 +194,79 @@ public class MoveObjectController : MonoBehaviour
                 case 0:
                     if (moveDistance < 0)
                     {
-                        return transform.localPosition.x >= originalPos;
+                        if (transform.localPosition.x >= originalPos)
+                        {
+                            transform.localPosition = new Vector3(originalPos, transform.localPosition.y, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
-                        return transform.localPosition.x <= originalPos;
+                        if (transform.localPosition.x <= originalPos)
+                        {
+                            transform.localPosition = new Vector3(originalPos, transform.localPosition.y, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
 
                 case 1:
                     if (moveDistance < 0)
                     {
-                        return transform.localPosition.y >= originalPos;
+                        if (transform.localPosition.y >= originalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, originalPos, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
-                        return transform.localPosition.y <= originalPos;
+                        if (transform.localPosition.y <= originalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, originalPos, transform.localPosition.z);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
 
                 case 2:
                     if (moveDistance < 0)
                     {
-                        return transform.localPosition.z >= originalPos;
+                        if (transform.localPosition.z >= originalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, originalPos);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
-                        return transform.localPosition.z <= originalPos;
+                        if (transform.localPosition.z <= originalPos)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, originalPos);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
 
                 default:
