@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class AssociationPanelController : MonoBehaviour
 {
-    private Rigidbody heldObjRB = null;
     private TextMeshPro textMesh;
+    private bool stop = false;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +22,7 @@ public class AssociationPanelController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Card" && other.gameObject.layer == 3 && heldObjRB == null)
+        if (other.gameObject.tag == "Card" && other.gameObject.layer == 3 && textMesh.text == "")
         {
             SetWord(other.gameObject);
         }
@@ -30,10 +30,13 @@ public class AssociationPanelController : MonoBehaviour
 
     private void SetWord(GameObject obj)
     {
-        TextMeshPro tmp = obj.transform.GetChild(0).GetComponent<TextMeshPro>();
+        if (!stop)
+        {
+            TextMeshPro tmp = obj.transform.GetChild(0).GetComponent<TextMeshPro>();
 
-        textMesh.text = tmp.text;
-        textMesh.fontSize = tmp.fontSize;
+            textMesh.text = tmp.text;
+            textMesh.fontSize = tmp.fontSize;
+        }
     }
 
     public void DropWord()
@@ -44,5 +47,10 @@ public class AssociationPanelController : MonoBehaviour
     public string GetWord()
     {
         return textMesh.text;
+    }
+
+    public void StopPanel()
+    {
+        stop = true;
     }
 }

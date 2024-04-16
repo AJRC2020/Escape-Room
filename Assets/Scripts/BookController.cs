@@ -38,7 +38,10 @@ public class BookController : MonoBehaviour
             CheckLocker();
         }
 
-        ActivatePages();
+        if (notLocked)
+        {
+            ControlPagesOnIndex(currentIndex);
+        }
     }
 
     [PunRPC]
@@ -210,6 +213,35 @@ public class BookController : MonoBehaviour
                 transform.GetChild(3).gameObject.SetActive(false);
                 transform.GetChild(4).gameObject.SetActive(true);
                 break;
+        }
+    }
+
+    private void ControlPagesOnIndex(int index)
+    {
+        for (int k = 1; k < transform.childCount - 1; k++)
+        {
+            if (k == index - 1)
+            {
+                if ((canMove && !rotPos) || index == transform.childCount - 1)
+                {
+                    transform.GetChild(k).gameObject.SetActive(true);
+                }
+            }
+            else if (k == index)
+            {
+                transform.GetChild(k).gameObject.SetActive(true);
+            }
+            else if (k == index + 1)
+            {
+                if ((canMove && rotPos) || index == 0)
+                {
+                    transform.GetChild(k).gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                transform.GetChild(k).gameObject.SetActive(false);
+            }
         }
     }
 

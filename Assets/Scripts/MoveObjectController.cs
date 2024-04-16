@@ -51,6 +51,37 @@ public class MoveObjectController : MonoBehaviour
         moveTo = !moveTo;
     }
 
+    public bool isRight()
+    {
+        if (moveTo)
+        {
+            if (moveDistance > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (moveDistance > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+
+    public bool BookHelper()
+    {
+        return CheckStop() && !isRight();
+    }
+
     private void MoveObject()
     {
         if (CheckStop())

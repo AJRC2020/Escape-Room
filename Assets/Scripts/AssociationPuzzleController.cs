@@ -12,12 +12,14 @@ public class AssociationPuzzleController : MonoBehaviour
     public float waitDuration = 0.1f;
     public float answerDuration = 0.5f;
     public Transform progressBar;
+    public GameObject prefab;
 
     private List<string> connections = new List<string>();
     private List<bool> found = Enumerable.Repeat(false, 8).ToList();
     private float elapsedTime = 0.0f;
     private int state = 0;
     private int increment = 0;
+    private bool stop = false;
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +30,10 @@ public class AssociationPuzzleController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateProgressBar();
+        if (!stop)
+        {
+            UpdateProgressBar();
+        }
 
         StateMachine();
     }
@@ -162,7 +167,13 @@ public class AssociationPuzzleController : MonoBehaviour
 
         if (progressBar.localScale.x == 1f) 
         {
-            Debug.Log("Finished");
+            if (GetComponent<PhotonView>().isMine)
+            {
+                PhotonNetwork.Instantiate(prefab.name, transform.position, Quaternion.identity, 0);
+                stop = true;
+                panels[0].StopPanel();
+                panels[1].StopPanel();
+            }
         }
     }
 }

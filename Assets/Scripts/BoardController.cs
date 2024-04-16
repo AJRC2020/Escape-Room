@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class BoardController : MonoBehaviour
 {
+    public GameObject prefab;
+
     [SerializeField]
     private float minDist = 0.1f;
     [SerializeField]
@@ -17,6 +19,7 @@ public class BoardController : MonoBehaviour
     private Vector3 prePos;
     private List<bool> found = Enumerable.Repeat(false, 15).ToList();
     private Dictionary<int, int> wordToLight = new Dictionary<int, int>();
+    private bool stop = false;
 
     // Start is called before the first frame update
     void Start()
@@ -44,20 +47,27 @@ public class BoardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (CountFound() == 15)
+        if (CountFound() == 15 && !stop)
         {
-            Debug.Log("Finished");
+            if (GetComponent<PhotonView>().isMine)
+            {
+                PhotonNetwork.Instantiate(prefab.name, transform.position, Quaternion.identity, 0);
+                stop = true;
+            }
         }
     }
 
     [PunRPC]
     public void Draw(Vector3 currentPos)
     {
-        if (Vector3.Distance(currentPos, prePos) > minDist || lineRenderer.positionCount == 0)
+        if (!stop)
         {
-            lineRenderer.positionCount++;
-            lineRenderer.SetPosition(lineRenderer.positionCount - 1, currentPos);
-            prePos = currentPos;
+            if (Vector3.Distance(currentPos, prePos) > minDist || lineRenderer.positionCount == 0)
+            {
+                lineRenderer.positionCount++;
+                lineRenderer.SetPosition(lineRenderer.positionCount - 1, currentPos);
+                prePos = currentPos;
+            }
         }
     }
 

@@ -211,6 +211,18 @@ public class GrabController : MonoBehaviour
 
             PhotonNetwork.Destroy(gameObject);
         }
+
+        if (gameObject.GetComponent<PanelButtonsHelper>() != null)
+        {
+            photonView = gameObject.GetComponent<PhotonView>();
+
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+
+            PanelButton();
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -296,6 +308,11 @@ public class GrabController : MonoBehaviour
     private void MoveStaticObject()
     {
         photonView.RPC("ChangeMove", PhotonTargets.AllBuffered);
+    }
+
+    private void PanelButton()
+    {
+        photonView.RPC("ButtonPressed", PhotonTargets.AllBuffered);
     }
 
     private void DropObject(bool isThrow)
