@@ -9,6 +9,7 @@ public class PanelController : MonoBehaviour
     public TextMeshPro diseaseText;
     public int solutionIndex = 9;
     public float rotationSpeed = 100f;
+    public TimerController timer;
 
     private List<string> diseases = new List<string>();
     private bool activated = false;
@@ -51,12 +52,12 @@ public class PanelController : MonoBehaviour
     {
         Transform parentTrans = transform.parent;
 
-        parentTrans.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
+        parentTrans.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime, Space.Self);
         totalRotation += rotationSpeed * Time.deltaTime;
 
         if (totalRotation > 90)
         {
-            parentTrans.eulerAngles = new Vector3(parentTrans.eulerAngles.x, 90f, parentTrans.eulerAngles.z);
+            //parentTrans.localEulerAngles = new Vector3(parentTrans.localEulerAngles.x, parentTrans.localEulerAngles.y, 90f);
             stop = true;
         }
     }
@@ -107,6 +108,11 @@ public class PanelController : MonoBehaviour
         {
             open = true;
             stop = false;
+        }
+        else
+        {
+            PhotonView photonViewTimer = timer.GetPhotonView();
+            photonViewTimer.RPC("Penalty", PhotonTargets.AllBuffered, 1);
         }
     }
 }

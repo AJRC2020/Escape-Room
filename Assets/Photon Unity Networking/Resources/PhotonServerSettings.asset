@@ -61,4 +61,5 @@ MonoBehaviour:
   - CanMove
   - DropObject
   - ButtonPressed
+  - Penalty
   DisableAutoOpenWizard: 1

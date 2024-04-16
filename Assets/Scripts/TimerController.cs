@@ -8,16 +8,13 @@ public class TimerController : MonoBehaviour
     private int duration = 3600;
     private float timeDelta = 0.0f;
 
-    private List<TextMeshPro> digitsList = new List<TextMeshPro>();
+    private List<List<TextMeshPro>> digitsList = new List<List<TextMeshPro>>();
     private PhotonView photonView;
 
     // Start is called before the first frame update
     void Start()
     {
-        digitsList.Add(transform.GetChild(0).GetChild(0).GetComponent<TextMeshPro>());
-        digitsList.Add(transform.GetChild(0).GetChild(1).GetComponent<TextMeshPro>());
-        digitsList.Add(transform.GetChild(0).GetChild(3).GetComponent<TextMeshPro>());
-        digitsList.Add(transform.GetChild(0).GetChild(4).GetComponent<TextMeshPro>());
+        CreateDigitsList();
 
         photonView = GetComponent<PhotonView>();
     }
@@ -43,14 +40,53 @@ public class TimerController : MonoBehaviour
         }
     }
 
+    public PhotonView GetPhotonView()
+    {
+        return photonView;
+    }
+
     [PunRPC]
     public void Decrease()
     {
         timeDelta = 0.0f;
         duration--;
-        digitsList[0].text = (duration / 600).ToString();
-        digitsList[1].text = (duration / 60 % 10).ToString();
-        digitsList[2].text = (duration % 60 / 10).ToString();
-        digitsList[3].text = (duration % 60 % 10).ToString();
+        UpdateAllTimers();
+    }
+
+    [PunRPC]
+    public void Penalty(int minutes)
+    {
+        duration -= minutes * 60;
+        UpdateAllTimers();
+    }
+
+    private void CreateDigitsList()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i).GetChild(0);
+            List<TextMeshPro> digits = new List<TextMeshPro>();
+
+            for (int j = 0; j < child.childCount; j++)
+            {
+                if (j != 2)
+                {
+                    digits.Add(child.GetChild(j).GetComponent<TextMeshPro>());
+                }
+            }
+
+            digitsList.Add(digits);
+        }
+    }
+
+    private void UpdateAllTimers()
+    {
+        foreach (List<TextMeshPro> digits in digitsList)
+        {
+            digits[0].text = (duration / 600).ToString();
+            digits[1].text = (duration / 60 % 10).ToString();
+            digits[2].text = (duration % 60 / 10).ToString();
+            digits[3].text = (duration % 60 % 10).ToString();
+        }
     }
 }
