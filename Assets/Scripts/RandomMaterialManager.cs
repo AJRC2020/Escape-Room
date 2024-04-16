@@ -9,16 +9,31 @@ public class RandomMaterialManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {        
-        int index = Random.Range(0, materials.Count);
+        PhotonView photonView = GetComponent<PhotonView>();
 
-        Renderer renderer = GetComponent<Renderer>();
+        if (photonView.isMine)
+        {
+            int index = Random.Range(0, materials.Count);
 
-        renderer.material = materials[index];
+            Renderer renderer = GetComponent<Renderer>();
+
+            renderer.material = materials[index];
+
+            photonView.RPC("AlterMaterial", PhotonTargets.OthersBuffered, index);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    [PunRPC]
+    public void AlterMaterial(int index)
+    {
+        Renderer renderer = GetComponent<Renderer>();
+
+        renderer.material = materials[index];
     }
 }

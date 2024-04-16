@@ -62,4 +62,6 @@ MonoBehaviour:
   - DropObject
   - ButtonPressed
   - Penalty
+  - AlterMaterial
+  - OpenDoor
   DisableAutoOpenWizard: 1

@@ -58,7 +58,7 @@ public class CylinderController: MonoBehaviour
     {
         currentRotation += 360 / number;
         currentRotation %= 360;
-        rotation = Quaternion.Euler(currentRotation, 0, 90);
+        rotation = Quaternion.Euler(currentRotation, transform.eulerAngles.y, 90);
         elapsedTime = 0;
         currentAnswer++;
         currentAnswer %= number;

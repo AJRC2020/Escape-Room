@@ -223,6 +223,18 @@ public class GrabController : MonoBehaviour
 
             PanelButton();
         }
+
+        if (gameObject.GetComponent<DoorController>() != null)
+        {
+            photonView = gameObject.GetComponent<PhotonView>();
+
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+
+            OpenDoor();
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -315,6 +327,10 @@ public class GrabController : MonoBehaviour
         photonView.RPC("ButtonPressed", PhotonTargets.AllBuffered);
     }
 
+    private void OpenDoor()
+    {
+        photonView.RPC("OpenDoor", PhotonTargets.AllBuffered);
+    }
     private void DropObject(bool isThrow)
     {
         heldObjRB.useGravity = true;
