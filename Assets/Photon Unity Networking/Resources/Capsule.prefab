@@ -626,7 +626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HoldArea: {fileID: 6356387211754160531}
   cameraController: {fileID: 1720781119844765085}
-  forceIntensity: 3.5
+  forceIntensity: 5
   zoomSpeed: 10
 --- !u!1 &4559818829888862032
 GameObject:

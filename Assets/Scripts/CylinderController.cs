@@ -28,7 +28,7 @@ public class CylinderController: MonoBehaviour
         if (isRotating)
         {
             elapsedTime = Time.deltaTime;
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, elapsedTime / rotTime);
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, rotation, elapsedTime / rotTime);
             if (elapsedTime >= rotTime)
             {
                 isRotating = false;
@@ -58,7 +58,7 @@ public class CylinderController: MonoBehaviour
     {
         currentRotation += 360 / number;
         currentRotation %= 360;
-        rotation = Quaternion.Euler(currentRotation, transform.eulerAngles.y, 90);
+        rotation = Quaternion.Euler(currentRotation, 0, 90);
         elapsedTime = 0;
         currentAnswer++;
         currentAnswer %= number;
