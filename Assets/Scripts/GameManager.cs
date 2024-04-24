@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject PlayerPrefab;
+    public GameObject FirstOptionPrefab;
+    public GameObject SecondOptionPrefab;
     public GameObject SceneCamera;
 
     public void Awake()
     {
-        PhotonNetwork.Instantiate(PlayerPrefab.name, this.transform.position, Quaternion.identity, 0);
+        if (DataTransfer.Instance.option)
+        {
+            PhotonNetwork.Instantiate(FirstOptionPrefab.name, this.transform.position, Quaternion.identity, 0);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate(SecondOptionPrefab.name, this.transform.position, Quaternion.identity, 0);
+        }
 
-        SceneCamera.SetActive(false);
+        SceneCamera.SetActive(false);    
     }
 }

@@ -25,6 +25,8 @@ public class PlayerController : Photon.MonoBehaviour
         {
             PlayerCamera.SetActive(true);
             PlayerNameText.text = PhotonNetwork.playerName;
+            PlayerNameText.gameObject.SetActive(false);
+            UncheckBody();
         }
         else
         {
@@ -51,9 +53,21 @@ public class PlayerController : Photon.MonoBehaviour
 
         controller.Move(moveDir * MoveSpeed * Time.deltaTime);
 
-        if (controller.isGrounded && velocity.y < 0)
+        bool isGrounded = Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, 0.2f);
+
+        if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
+        }
+    }
+
+    private void UncheckBody()
+    {
+        for (int i = 0; i < transform.childCount - 3; i++)
+        {
+            GameObject child = transform.GetChild(i).gameObject;
+
+            child.gameObject.SetActive(false);
         }
     }
 }
