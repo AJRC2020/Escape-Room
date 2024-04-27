@@ -29,6 +29,12 @@ public class FridgeController : MonoBehaviour
             {
                 PhotonNetwork.Destroy(locker);
             }
+
+            PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+            if (photonViewDialogue.isMine)
+            {
+                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "fridge", 6f);
+            }
         }
 
         if (locker != null)

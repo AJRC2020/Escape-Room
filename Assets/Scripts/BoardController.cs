@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoardController : MonoBehaviour
@@ -20,6 +21,8 @@ public class BoardController : MonoBehaviour
     private List<bool> found = Enumerable.Repeat(false, 15).ToList();
     private Dictionary<int, int> wordToLight = new Dictionary<int, int>();
     private bool stop = false;
+    private bool notFound = true;
+    private bool notFound8 = true;
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +56,24 @@ public class BoardController : MonoBehaviour
             {
                 PhotonNetwork.Instantiate(prefab.name, transform.position, Quaternion.identity, 0);
                 stop = true;
+            }
+
+            PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+            if (photonViewDialogue.isMine)
+            {
+                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board3", 3f);
+            }
+        }
+
+        if (CountFound() == 8 && notFound8)
+        {
+            notFound8 = false;
+            PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+            if (photonViewDialogue.isMine)
+            {
+                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board2", 5f);
             }
         }
     }
@@ -108,6 +129,17 @@ public class BoardController : MonoBehaviour
         {
             found[index] = true;
             ActivateLight(index);
+
+            if (notFound)
+            {
+                notFound = false;
+                PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+                if (photonViewDialogue.isMine)
+                {
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board1", 8f);
+                }
+            }
         }
     }
 

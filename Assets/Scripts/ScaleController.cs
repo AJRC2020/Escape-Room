@@ -19,6 +19,7 @@ public class ScaleController : MonoBehaviour
     private Vector3 finalPos;
     private bool allowCollision = true;
     private Dictionary<string, int> map = new Dictionary<string, int>();
+    private bool notTouched = true;
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +82,16 @@ public class ScaleController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Food" && collision.gameObject.layer == 3 && allowCollision && heldObjRB == null)
         {
+            if (notTouched)
+            {
+                notTouched = true;
+
+                PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+                if (photonView.isMine)
+                {
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "counter", 8f);
+                }
+            }
             SetObject(collision.gameObject);
         }
     }

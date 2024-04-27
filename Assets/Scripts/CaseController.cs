@@ -47,10 +47,35 @@ public class CaseController : MonoBehaviour
         }
     }
 
+    private void PlayDialogue()
+    {
+        PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+        if (photonView.isMine)
+        {
+            switch (gameObject.name)
+            {
+                case "Case":
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case1", 3f);
+                    break;
+
+                case "Case (1)":
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case2", 5f);
+                    break;
+
+                case "Case (2)":
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case3", 6f);
+                    break;
+
+                case "Case (3)":
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case4", 6f);
+                    break;
+            }
+        }
+    }
+
     private void Check()
     {
         startRotation = totalRotation < 90f;
-        Debug.Log("Spin = " + totalRotation);
-        Debug.Log("Speed = " + rotationSpeed);
     }
 }

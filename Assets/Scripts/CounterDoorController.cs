@@ -8,6 +8,7 @@ public class CounterDoorController : MonoBehaviour
 
     private bool open = false;
     private Transform childTrans;
+    private static bool notMoved = true;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,17 @@ public class CounterDoorController : MonoBehaviour
     public void ChangeDoor()
     {
         open = !open;
+
+        if (notMoved)
+        {
+            notMoved = false;
+            PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+            if (photonView.isMine)
+            {
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "counter", 5f);
+            }
+        }
     }
 
     private void RotateDoor()

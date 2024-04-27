@@ -38,6 +38,13 @@ public class DoorController : MonoBehaviour
         if (!over)
         {
             start = true;
+
+            PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+            if (photonView.isMine)
+            {
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door1", 8f);
+            }
         }
     }
 }

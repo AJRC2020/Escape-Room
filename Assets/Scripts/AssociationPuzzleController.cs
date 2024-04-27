@@ -20,6 +20,7 @@ public class AssociationPuzzleController : MonoBehaviour
     private int state = 0;
     private int increment = 0;
     private bool stop = false;
+    private bool notFound = true;
 
     // Start is called before the first frame update
     void Start()
@@ -78,6 +79,14 @@ public class AssociationPuzzleController : MonoBehaviour
 
                     case 1:
                         icons[1].SetActive(true);
+
+                        PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+                        if (photonView.isMine)
+                        {
+                            photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "association1", 3f);
+                        }
+
                         break;
                 }
 
@@ -173,6 +182,13 @@ public class AssociationPuzzleController : MonoBehaviour
                 stop = true;
                 panels[0].StopPanel();
                 panels[1].StopPanel();
+
+                PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+                if (photonView.isMine)
+                {
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "association2", 8f);
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ public class CameraPlayerController : MonoBehaviour
     public float senY = 400.0f;
 
     private float rotX = 0.0f;
+    private bool frozen = true;
 
     private void Awake()
     {
@@ -23,7 +24,11 @@ public class CameraPlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (photonView.isMine)
+        if (frozen)
+        {
+            CheckDialogueManager();
+        }
+        else if (photonView.isMine)
         {
             CheckCamera();
         }
@@ -39,5 +44,10 @@ public class CameraPlayerController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(rotX, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
+    }
+
+    private void CheckDialogueManager()
+    {
+        frozen = DialogueManager.Instance.GetNumberOfMessage() < 4;
     }
 }

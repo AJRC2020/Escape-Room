@@ -12,6 +12,7 @@ public class MoveObjectController : MonoBehaviour
     private bool moveTo = false;
     private float originalPos;
     private float finalPos;
+    private bool notMoved = true;
 
     // Start is called before the first frame update
     void Start()
@@ -89,6 +90,12 @@ public class MoveObjectController : MonoBehaviour
             return;
         }
 
+        if (notMoved)
+        {
+            PlayDialogue();
+            notMoved = false;
+        }
+
         Vector3 movement = Vector3.zero;
 
         switch(axis)
@@ -126,6 +133,19 @@ public class MoveObjectController : MonoBehaviour
             else
             {
                 transform.Translate(-movement, Space.Self);
+            }
+        }
+    }
+
+    private void PlayDialogue()
+    {
+        PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+        if (photonView.isMine)
+        {
+            if (gameObject.name == "Rug2")
+            {
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "rug", 6f);
             }
         }
     }

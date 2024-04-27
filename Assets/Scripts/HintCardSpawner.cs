@@ -27,4 +27,27 @@ public class HintCardSpawner : MonoBehaviour
             Destroy(this);
         }
     }
+
+    private void PlayDialogue()
+    {
+        PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+        if (photonView.isMine)
+        {
+            switch (HintCard.name)
+            {
+                case "Hint Card 1":
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint1", 2f);
+                    break;
+
+                case "Hint Card 2":
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint2", 5f);
+                    break;
+
+                case "Hint Card 3":
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint3", 6f);
+                    break;
+            }
+        }
+    }
 }

@@ -108,6 +108,13 @@ public class PanelController : MonoBehaviour
         {
             open = true;
             stop = false;
+
+            PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+            if (photonView.isMine)
+            {
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door3", 4f);
+            }
         }
         else
         {

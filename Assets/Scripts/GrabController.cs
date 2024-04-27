@@ -198,6 +198,7 @@ public class GrabController : MonoBehaviour
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
             MoveStaticObject();
+            PlayDialogue(gameObject.name);
         }
 
         if (gameObject.tag == "Key")
@@ -331,6 +332,26 @@ public class GrabController : MonoBehaviour
     {
         photonView.RPC("OpenDoor", PhotonTargets.AllBuffered);
     }
+
+    private void PlayDialogue(string objName)
+    {
+        PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+        if (photonViewDialogue.isMine)
+        {
+            switch (objName)
+            {
+                case "Button Small":
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button1", 3f);
+                    break;
+
+                case "Button Big":
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button2", 4.5f);
+                    break;
+            }
+        }
+    }
+
     private void DropObject(bool isThrow)
     {
         heldObjRB.useGravity = true;

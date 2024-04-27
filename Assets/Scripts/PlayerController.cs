@@ -18,6 +18,8 @@ public class PlayerController : Photon.MonoBehaviour
     private float z;
     private float gravity = -9.81f;
     private Vector3 velocity = Vector3.zero;
+    private bool frozen = true;
+    private bool sent = false;
 
     private void Awake()
     {
@@ -36,7 +38,16 @@ public class PlayerController : Photon.MonoBehaviour
 
     private void Update()
     {
-        if (photonView.isMine)
+        if (!sent && photonView.isMine)
+        {
+            DialogueManager.Instance.GetPhotonView().RPC("AddPlayer", PhotonTargets.AllBuffered);
+            sent = true;
+        }
+        if (frozen)
+        {
+            CheckDialogueManager();
+        }
+        else if (photonView.isMine)
         {
             CheckInput();
         }
@@ -69,5 +80,10 @@ public class PlayerController : Photon.MonoBehaviour
 
             child.gameObject.SetActive(false);
         }
+    }
+
+    private void CheckDialogueManager()
+    {
+        frozen = DialogueManager.Instance.GetNumberOfMessage() < 4;
     }
 }
