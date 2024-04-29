@@ -7,84 +7,32 @@ using TMPro;
 
 public class ScaleController : MonoBehaviour
 {
-    public Transform HoldArea;
-    public float scaleFactor = 0.5f;
     public List<TextMeshPro> digits = new List<TextMeshPro>();
     public GameObject enableDigits;
 
-    private Rigidbody heldObjRB;
-    private float currentTime = 0.0f;
-    private Transform childTrans;
-    private Vector3 originalPos;
-    private Vector3 finalPos;
-    private bool allowCollision = true;
     private Dictionary<string, int> map = new Dictionary<string, int>();
     private bool notTouched = true;
+    private string foodName = "";
 
     // Start is called before the first frame update
     void Start()
     {
-        childTrans = transform.GetChild(0);
-        originalPos = transform.position;
-        finalPos = transform.position - new Vector3(0f, 0.25f, 0f);
-
         CreateMap();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (heldObjRB != null)
-        {
-            childTrans.position = Vector3.Lerp(originalPos, finalPos, 4 * currentTime);
-            currentTime += Time.deltaTime;
-        }
-        else
-        {
-            childTrans.position = Vector3.Lerp(finalPos, originalPos, 4 * currentTime);
-            currentTime += Time.deltaTime;
-            if (currentTime > 0.25f)
-            {
-                allowCollision = true;
-            }
-        }
-    }
-
-    public GameObject GetHeldObject()
-    {
-        if (heldObjRB != null)
-        {
-            GameObject retObj = heldObjRB.gameObject;
-            retObj.transform.localScale /= scaleFactor;
-            heldObjRB.constraints = RigidbodyConstraints.None;
-            heldObjRB = null;
-            enableDigits.SetActive(false);
-            return retObj;
-        }
-        else 
-        { 
-            return null; 
-        }
-    }
-
-    [PunRPC]
-    public void GetObjectOut()
-    {
-        GameObject retObj = heldObjRB.gameObject;
-        retObj.transform.localScale /= scaleFactor;
-        heldObjRB.constraints = RigidbodyConstraints.None;
-        heldObjRB = null;
-        enableDigits.SetActive(false);
-        retObj.transform.parent = null;
+        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Food" && collision.gameObject.layer == 3 && allowCollision && heldObjRB == null)
+        if (collision.gameObject.tag == "Food" && collision.gameObject.layer == 3 && foodName == "")
         {
             if (notTouched)
             {
-                notTouched = true;
+                notTouched = false;
 
                 PhotonView photonView = DialogueManager.Instance.GetPhotonView();
                 if (photonView.isMine)
@@ -92,29 +40,23 @@ public class ScaleController : MonoBehaviour
                     photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "counter", 8f);
                 }
             }
-            SetObject(collision.gameObject);
+            UpdatePanel(collision.gameObject.name);
         }
     }
 
-    private void SetObject(GameObject obj)
+    private void OnCollisionExit(Collision collision)
     {
-        obj.layer = 0;
-        obj.transform.rotation = Quaternion.identity;
-        obj.transform.position = HoldArea.position;
-        obj.transform.localScale *= scaleFactor;
-
-        heldObjRB = obj.GetComponent<Rigidbody>();
-        heldObjRB.useGravity = false;
-        heldObjRB.drag = 10;
-        heldObjRB.constraints = RigidbodyConstraints.FreezeAll;
-
-        heldObjRB.transform.parent = HoldArea;
-
-        UpdatePanel(obj.name);
+        if (collision.gameObject.tag == "Food" && foodName == collision.gameObject.name)
+        {
+            foodName = "";
+            enableDigits.SetActive(false);
+        }
     }
 
     private void UpdatePanel(string name)
     {
+        foodName = name;
+
         int calories = map[name];
 
         enableDigits.SetActive(true);

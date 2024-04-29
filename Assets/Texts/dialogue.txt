@@ -4,7 +4,7 @@ start3 A porta de saída está ao fundo do corredor. Será que vão conseguir sa
 door1 É aqui aonde tantas obras primas minhas foram criadas e aonde chorava quando não cria que ninguém me ouvi-se. ;-;
 door2 Adoro comer. Pena que os cozinheiros desistem sempre que os prendo dentro de casa. Já não se fazem trabalhadores como antigamente.
 door3 Hmm... Sorte de principiante é que eu acho.
-break1 Mas partem as coisas em voça casa?
+break1 Mas partem as coisas em vossa casa?
 rug Eu nunca mandei ajeitar esse buraco no chão. Não me perguntes de onde veio.
 counter Olha que não podes levar nada. Eu vou a polícia, põi-te fino.
 scale Nunca percebi porque arranjei uma balança que diz as calorias em vez do peso. Deve ter sido a minha ex-mulher.

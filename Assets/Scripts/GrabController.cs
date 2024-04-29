@@ -10,6 +10,7 @@ public class GrabController : MonoBehaviour
     public CameraPlayerController cameraController;
     public float forceIntensity = 5.0f;
     public float zoomSpeed = 1.0f;
+    public Animator animator;
 
     private PhotonView photonView;
     private GameObject heldObj;
@@ -51,7 +52,6 @@ public class GrabController : MonoBehaviour
                 }
                 else
                 {
-                    //photonView.RPC("Pressed", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
                     heldDownObj.GetComponent<ButtonLockController>().Pressed(photonView);
                 }
             }
@@ -145,15 +145,7 @@ public class GrabController : MonoBehaviour
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
             RotateLock(gameObject);
-        }
-        if (gameObject.GetComponent<ScaleController>() != null)
-        {
-            photonView = gameObject.GetComponentInParent<PhotonView>();
-            if (!photonView.isMine)
-            {
-                photonView.TransferOwnership(PhotonNetwork.player);
-            }
-            TakeOutObject(gameObject);
+            animator.SetBool("isGrabbing", true);
         }
         if (gameObject.GetComponentInParent<CounterDoorController>() != null)
         {
@@ -250,12 +242,13 @@ public class GrabController : MonoBehaviour
         heldObj = pickObj;
         heldObj.GetComponent<PhotonView>().enabled = false;
 
+        animator.SetBool("isGrabbing", true);
+
         photonView.RPC("SetUpObject", PhotonTargets.OthersBuffered);
     }
 
     private void TurnObject(GameObject turnObj)
     {
-        //turnObj.GetComponent<CylinderController>().MoveCylinder();
         int index = turnObj.transform.GetSiblingIndex() - 1;
         photonView.RPC("MoveCylinder", PhotonTargets.AllBuffered, index);
     }
@@ -264,14 +257,15 @@ public class GrabController : MonoBehaviour
     {
         mouseDown = true;
         heldDownObj = buttonObj;
+        animator.SetBool("isGrabbing", true);
     }
 
     private void UnrotateLock()
     {
         mouseDown = false;
         photonView.RPC("Stopped", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
-        //heldDownObj.GetComponent<ButtonLockController>().Stopped();
         heldDownObj = null;
+        animator.SetBool("isGrabbing", false);
     }
 
     private void DrawObject(GameObject drawObj)
@@ -293,24 +287,7 @@ public class GrabController : MonoBehaviour
         mouseDown = false;
         photonView.RPC("StopDrawing", PhotonTargets.AllBuffered);
         heldDownObj = null;
-    }
-
-    private void TakeOutObject(GameObject scaleObj)
-    {
-        GameObject obj = scaleObj.GetComponent<ScaleController>().GetHeldObject();
-
-        if (obj != null)
-        {
-            photonView.RPC("GetObjectOut", PhotonTargets.OthersBuffered);
-
-            photonView = obj.GetComponent<PhotonView>();
-            if (!photonView.isMine)
-            {
-                photonView.TransferOwnership(PhotonNetwork.player);
-            }
-
-            PickupObject(obj);
-        }
+        animator.SetBool("isGrabbing", false);
     }
 
     private void OpenCounterDoor()
@@ -369,6 +346,8 @@ public class GrabController : MonoBehaviour
         }
 
         heldObj = null;
+
+        animator.SetBool("isGrabbing", false);
 
         HoldArea.localPosition = new Vector3(0, 0.5f, 3.5f);
 

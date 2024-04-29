@@ -100,7 +100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Cansaso\nFadiga\nCalafrios\nEnjoo\nDores de Cabe\xE7a\n\n"
+  m_text: "Cansa\xE7o\nFadiga\nCalafrios\nEnjoo\nDores de Cabe\xE7a\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -211,7 +211,7 @@ Transform:
   - {fileID: 3016558199180886390}
   - {fileID: 6856340195114813728}
   m_Father: {fileID: 0}
-  m_RootOrder: 75
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &7666966190996903665
 MeshFilter:
