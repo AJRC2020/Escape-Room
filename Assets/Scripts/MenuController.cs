@@ -14,6 +14,7 @@ public class MenuController : MonoBehaviour
 
     [SerializeField] private TMP_InputField UsernameInput;
     [SerializeField] private TMP_InputField RoomInput;
+    [SerializeField] private TMP_InputField PlayersInput;
 
     [SerializeField] private GameObject CreateBtn;
     [SerializeField] private GameObject JoinBtn;
@@ -72,7 +73,7 @@ public class MenuController : MonoBehaviour
 
     private void EnableButtons()
     {
-        if (UsernameInput.text.Length >= 1 && RoomInput.text.Length >= 4 && !moving) 
+        if (UsernameInput.text.Length >= 1 && RoomInput.text.Length >= 4 && !moving && int.TryParse(PlayersInput.text, out DataTransfer.Instance.players) && PlayersInput.text.Length >= 1) 
         {
             CreateBtn.SetActive(true);
             JoinBtn.SetActive(true);

@@ -66,4 +66,5 @@ MonoBehaviour:
   - OpenDoor
   - PlayDialogue
   - AddPlayer
+  - Pressing
   DisableAutoOpenWizard: 1

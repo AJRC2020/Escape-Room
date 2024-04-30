@@ -6,6 +6,7 @@ public class DataTransfer : MonoBehaviour
 {
     public static DataTransfer Instance { get; private set; }
     public bool option;
+    public int players;
 
     private void Awake()
     {

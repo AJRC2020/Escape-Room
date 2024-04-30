@@ -10,7 +10,7 @@ public class GrabController : MonoBehaviour
     public CameraPlayerController cameraController;
     public float forceIntensity = 5.0f;
     public float zoomSpeed = 1.0f;
-    public Animator animator;
+    //public Animator animator;
 
     private PhotonView photonView;
     private GameObject heldObj;
@@ -145,7 +145,7 @@ public class GrabController : MonoBehaviour
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
             RotateLock(gameObject);
-            animator.SetBool("isGrabbing", true);
+            //animator.SetBool("isGrabbing", true);
         }
         if (gameObject.GetComponentInParent<CounterDoorController>() != null)
         {
@@ -228,6 +228,18 @@ public class GrabController : MonoBehaviour
 
             OpenDoor();
         }
+
+        if (gameObject.GetComponent<MonitorHelper>() != null)
+        {
+            photonView = gameObject.GetComponent<PhotonView>();
+
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+
+            PressMonitor();
+        }
     }
 
     private void PickupObject(GameObject pickObj)
@@ -242,7 +254,7 @@ public class GrabController : MonoBehaviour
         heldObj = pickObj;
         heldObj.GetComponent<PhotonView>().enabled = false;
 
-        animator.SetBool("isGrabbing", true);
+        //animator.SetBool("isGrabbing", true);
 
         photonView.RPC("SetUpObject", PhotonTargets.OthersBuffered);
     }
@@ -257,7 +269,7 @@ public class GrabController : MonoBehaviour
     {
         mouseDown = true;
         heldDownObj = buttonObj;
-        animator.SetBool("isGrabbing", true);
+        //animator.SetBool("isGrabbing", true);
     }
 
     private void UnrotateLock()
@@ -265,7 +277,7 @@ public class GrabController : MonoBehaviour
         mouseDown = false;
         photonView.RPC("Stopped", PhotonTargets.AllBuffered, heldDownObj.GetComponent<ButtonLockController>().isLeft);
         heldDownObj = null;
-        animator.SetBool("isGrabbing", false);
+        //animator.SetBool("isGrabbing", false);
     }
 
     private void DrawObject(GameObject drawObj)
@@ -287,7 +299,7 @@ public class GrabController : MonoBehaviour
         mouseDown = false;
         photonView.RPC("StopDrawing", PhotonTargets.AllBuffered);
         heldDownObj = null;
-        animator.SetBool("isGrabbing", false);
+        //animator.SetBool("isGrabbing", false);
     }
 
     private void OpenCounterDoor()
@@ -308,6 +320,11 @@ public class GrabController : MonoBehaviour
     private void OpenDoor()
     {
         photonView.RPC("OpenDoor", PhotonTargets.AllBuffered);
+    }
+
+    private void PressMonitor()
+    {
+        photonView.RPC("Pressing", PhotonTargets.AllBuffered);
     }
 
     private void PlayDialogue(string objName)
@@ -347,7 +364,7 @@ public class GrabController : MonoBehaviour
 
         heldObj = null;
 
-        animator.SetBool("isGrabbing", false);
+        //animator.SetBool("isGrabbing", false);
 
         HoldArea.localPosition = new Vector3(0, 0.5f, 3.5f);
 

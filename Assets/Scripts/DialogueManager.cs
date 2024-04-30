@@ -19,7 +19,7 @@ public class DialogueManager : MonoBehaviour
     private string text;
     private int startingMessages = 1;
     private int numberOfPlayers = 0;
-    private int numberOfPlayersToStart = 2;
+    private int numberOfPlayersToStart = 1;
 
     // Start is called before the first frame update
     void Awake()
@@ -35,6 +35,7 @@ public class DialogueManager : MonoBehaviour
 
         photonView = GetComponent<PhotonView>();
         childObj = transform.GetChild(0).gameObject;
+        numberOfPlayersToStart = DataTransfer.Instance.players;
         GetDialogue();
     }
 
