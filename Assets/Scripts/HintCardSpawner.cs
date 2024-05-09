@@ -37,15 +37,15 @@ public class HintCardSpawner : MonoBehaviour
             switch (HintCard.name)
             {
                 case "Hint Card 1":
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint1", 2f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint1");
                     break;
 
                 case "Hint Card 2":
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint2", 5f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint2");
                     break;
 
                 case "Hint Card 3":
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint3", 6f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "hint3");
                     break;
             }
         }

@@ -49,7 +49,7 @@ public class KitchenDoorController : MonoBehaviour
 
             if (photonView.isMine)
             {
-                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door2", 10f);
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door2");
             }
         }
     }

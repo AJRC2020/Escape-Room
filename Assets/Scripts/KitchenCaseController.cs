@@ -50,12 +50,12 @@ public class KitchenCaseController : MonoBehaviour
         {
             start = true;
 
-            /*PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+            PhotonView photonView = DialogueManager.Instance.GetPhotonView();
 
             if (photonView.isMine)
             {
-                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door2", 10f);
-            }*/
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case");
+            }
         }
     }
 }

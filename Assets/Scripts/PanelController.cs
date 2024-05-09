@@ -113,7 +113,7 @@ public class PanelController : MonoBehaviour
 
             if (photonView.isMine)
             {
-                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door3", 4f);
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door3");
             }
         }
         else

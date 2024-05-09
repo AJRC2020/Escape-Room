@@ -29,3 +29,12 @@ timer3 15 minutos até ao fim, é melhor despacherem-se.
 timer4 Últimos 10 minutos. Ó meu deus, vai até ao fim. Eu não aguento. O meu coração.
 timer5 5 minutos e 1 sonho, boa sorte.
 timer6 Ia... acabou. Desistam. É o fim. Tenho que contactar o meu advogado.
+requestFood Ai... Estou quase a desmaiar, preciso de comer. Vão buscar-me uma pizza e um muffin. Tragam o cocktail para eu beber. Vão rápido
+requestRemote Ai... Preciso de ver TV para me distrair, vão buscar o comando.
+requestStool Ai.. Preciso que do banco para meter a comida. Despachem-se.
+requestGlasses Ai.. Não vejo nada sem os óculos. Descubram aí aonde eu os deixei. Preciso para ver a TV.
+case Vão precisar dessa chave para fazerem o meu remédio. Estou a passar mal.
+mixer É isso. Tragam o meu cafézinho depressa... Esperem se eu tomar o meu café vocês vão se embora. Hmmm......
+speech1 Parabéns por chegarem até aqui. Não estava a espera. Mas agora têm que me tratar. Eu estou doente, por isso espero que me façam todas as vontades.
+speech2 Vou precisar que me façam o meu remédio. A receita está na cozinha, mas vão precisar de algo neste quarto para saber a receita.
+speech3 Aiaiaiai... Estou tão mal. Podem praticar ali ao lado a operação. Ai... Estou mesmo mal, ai de mim.

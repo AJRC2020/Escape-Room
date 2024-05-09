@@ -37,7 +37,7 @@ public class ScaleController : MonoBehaviour
                 PhotonView photonView = DialogueManager.Instance.GetPhotonView();
                 if (photonView.isMine)
                 {
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "counter", 8f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "counter");
                 }
             }
             UpdatePanel(collision.gameObject.name);

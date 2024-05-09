@@ -50,6 +50,7 @@ public class PlayerController : Photon.MonoBehaviour
         else if (photonView.isMine)
         {
             CheckInput();
+            CheckDialogueManager();
         }
     }
 
@@ -84,6 +85,13 @@ public class PlayerController : Photon.MonoBehaviour
 
     private void CheckDialogueManager()
     {
-        frozen = DialogueManager.Instance.GetNumberOfMessage() < 4;
+        if (DialogueManager.Instance.hasSpeechStarted())
+        {
+            frozen = DialogueManager.Instance.GetNumberOfLines() < 4;
+        }
+        else
+        {
+            frozen = DialogueManager.Instance.GetNumberOfMessage() < 4;
+        }
     }
 }

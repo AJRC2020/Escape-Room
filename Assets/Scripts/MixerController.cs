@@ -122,6 +122,13 @@ public class MixerController : MonoBehaviour
                         {
                             PhotonNetwork.Instantiate(cup.name, transform.position, Quaternion.identity, 0);
                         }
+
+                        PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+                        if (photonView.isMine)
+                        {
+                            photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "mixer");
+                        }
                     }
                     else
                     {

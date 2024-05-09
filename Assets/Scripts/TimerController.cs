@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class TimerController : MonoBehaviour
 {
+    public float stageChange = 1.15f;
+
     private int duration = 3600;
     private float timeDelta = 0.0f;
 
     private List<List<TextMeshPro>> digitsList = new List<List<TextMeshPro>>();
     private PhotonView photonView;
     private bool frozen = true;
+    private float timeModifier = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +40,7 @@ public class TimerController : MonoBehaviour
             }
             else
             {
-                timeDelta += Time.deltaTime;
+                timeDelta += Time.deltaTime * timeModifier;
             }
 
             if (duration == 0)
@@ -45,11 +48,28 @@ public class TimerController : MonoBehaviour
                 Debug.Log("Game Over");
             }
         }
+
+        PlayDialogue();
     }
 
     public PhotonView GetPhotonView()
     {
         return photonView;
+    }
+
+    public void IncreaseStage()
+    {
+        timeModifier *= stageChange;
+    }
+
+    public void DecreaseStage()
+    {
+        timeModifier /= stageChange;
+
+        if (timeModifier < 1.0f)
+        {
+            timeModifier = 1.0f;
+        }
     }
 
     [PunRPC]
@@ -111,27 +131,27 @@ public class TimerController : MonoBehaviour
             switch (duration)
             {
                 case 2700:
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer1", 6f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer1");
                     break;
 
                 case 1800:
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer2", 5.5f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer2");
                     break;
 
                 case 900:
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer3", 5f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer3");
                     break;
 
                 case 600:
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer4", 7f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer4");
                     break;
 
                 case 300:
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer5", 4f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer5");
                     break;
 
                 case 60:
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer6", 7f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "timer6");
                     break;
             }
         }

@@ -31,6 +31,7 @@ public class CameraPlayerController : MonoBehaviour
         else if (photonView.isMine)
         {
             CheckCamera();
+            CheckDialogueManager();
         }
     }
 
@@ -48,6 +49,13 @@ public class CameraPlayerController : MonoBehaviour
 
     private void CheckDialogueManager()
     {
-        frozen = DialogueManager.Instance.GetNumberOfMessage() < 4;
+        if (DialogueManager.Instance.hasSpeechStarted())
+        {
+            frozen = DialogueManager.Instance.GetNumberOfLines() < 4;
+        }
+        else
+        {
+            frozen = DialogueManager.Instance.GetNumberOfMessage() < 4;
+        }
     }
 }

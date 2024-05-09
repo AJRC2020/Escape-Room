@@ -28,3 +28,5 @@ pineapple 50
 rice 130
 watermelon 30
 tempura 160
+cocktail 185
+muffin 375

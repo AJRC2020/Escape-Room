@@ -9,13 +9,13 @@ public class MoveObjectController : MonoBehaviour
     public int axis = 0;
     public bool useWorld = false;
 
-    private bool moveTo = false;
+    protected bool moveTo = false;
     private float originalPos;
     private float finalPos;
     private bool notMoved = true;
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         switch(axis)
         {
@@ -41,7 +41,7 @@ public class MoveObjectController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         MoveObject();   
     }
@@ -145,12 +145,12 @@ public class MoveObjectController : MonoBehaviour
         {
             if (gameObject.name == "Rug2")
             {
-                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "rug", 6f);
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "rug");
             }
         }
     }
 
-    private bool CheckStop()
+    protected bool CheckStop()
     {
         if (moveTo)
         {

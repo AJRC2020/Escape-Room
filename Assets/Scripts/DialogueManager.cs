@@ -9,6 +9,8 @@ public class DialogueManager : MonoBehaviour
     public static DialogueManager Instance { get; private set; }
     public TextMeshProUGUI dialogue;
     public float typeSpeed = 0.05f;
+    public float extraDuration = 0.5f;
+    public GameObject greenKey;
 
     private Dictionary<string, string> DialogueLines = new Dictionary<string, string>();
     private PhotonView photonView;
@@ -20,6 +22,10 @@ public class DialogueManager : MonoBehaviour
     private int startingMessages = 1;
     private int numberOfPlayers = 0;
     private int numberOfPlayersToStart = 1;
+
+    private bool startSpeech = false;
+    private int speechLine = 1;
+    private bool inExtraTime = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -48,22 +54,43 @@ public class DialogueManager : MonoBehaviour
             {
                 string dialogueChoice = "start" + startingMessages.ToString();
 
-                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, dialogueChoice, 12f);
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, dialogueChoice);
             }
         }
 
-        if (showing)
+        if (startSpeech && !showing && speechLine < 4)
+        {
+            if (photonView.isMine)
+            {
+                string dialogueLine = "speech" + speechLine.ToString();
+
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, dialogueLine);
+            }
+        }
+
+        if (showing && inExtraTime)
         {
             duration -= Time.deltaTime;
 
             if (duration < 0.0f)
             {
-                Debug.Log("Wtf");
                 showing = false;
+                inExtraTime = false;
                 childObj.SetActive(false);
                 if (startingMessages < 4)
                 {
-                    startingMessages++;
+                    if (photonView.isMine)
+                    {
+                        photonView.RPC("IncreaseMessage", PhotonTargets.AllBuffered);
+                    }
+                }
+
+                if (speechLine < 4 && startSpeech)
+                {
+                    if (photonView.isMine)
+                    {
+                        photonView.RPC("IncreaseSpeech", PhotonTargets.AllBuffered);
+                    }
                 }
             }
         }
@@ -85,14 +112,41 @@ public class DialogueManager : MonoBehaviour
         return startingMessages;
     }
 
+    public int GetNumberOfLines()
+    {
+        return speechLine;
+    }
+
+    public void StartSpeech()
+    {
+        startSpeech = true;
+    }
+
+    public bool hasSpeechStarted()
+    {
+        return startSpeech;
+    }
+
     [PunRPC]
-    public void PlayDialogue(string dialogue, float duration)
+    public void PlayDialogue(string dialogue)
     {
         text = DialogueLines[dialogue];
-        this.duration = duration;
+        duration = extraDuration;
         showing = true;
         childObj.SetActive(true);
         StartCoroutine(TypeDialogue());
+    }
+
+    [PunRPC]
+    public void IncreaseMessage()
+    {
+        startingMessages++;
+    }
+
+    [PunRPC]
+    public void IncreaseSpeech()
+    {
+        speechLine++;
     }
 
     private IEnumerator TypeDialogue()
@@ -104,8 +158,9 @@ public class DialogueManager : MonoBehaviour
             dialogue.text = displayText;
 
             yield return new WaitForSeconds(typeSpeed);
-
         }
+
+        inExtraTime = true;
     }
 
     private void GetDialogue()

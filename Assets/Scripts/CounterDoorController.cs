@@ -34,7 +34,7 @@ public class CounterDoorController : MonoBehaviour
 
             if (photonView.isMine)
             {
-                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "counter", 5f);
+                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "counter");
             }
         }
     }

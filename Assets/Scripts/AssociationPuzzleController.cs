@@ -84,7 +84,7 @@ public class AssociationPuzzleController : MonoBehaviour
 
                         if (photonView.isMine)
                         {
-                            photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "association1", 3f);
+                            photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "association1");
                         }
 
                         break;
@@ -187,7 +187,7 @@ public class AssociationPuzzleController : MonoBehaviour
 
                 if (photonView.isMine)
                 {
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "association2", 8f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "association2");
                 }
             }
         }

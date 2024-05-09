@@ -41,7 +41,7 @@ public class BreakableWallController : MonoBehaviour
 
                     if (photonView.isMine)
                     {
-                        photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "break1", 3.5f);
+                        photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "break1");
                     }
 
                     PhotonNetwork.Destroy(gameObject);

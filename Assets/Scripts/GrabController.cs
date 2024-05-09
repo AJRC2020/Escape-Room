@@ -336,11 +336,11 @@ public class GrabController : MonoBehaviour
             switch (objName)
             {
                 case "Button Small":
-                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button1", 3f);
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button1");
                     break;
 
                 case "Button Big":
-                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button2", 4.5f);
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button2");
                     break;
             }
         }

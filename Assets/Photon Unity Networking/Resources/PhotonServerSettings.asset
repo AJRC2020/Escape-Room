@@ -67,4 +67,6 @@ MonoBehaviour:
   - PlayDialogue
   - AddPlayer
   - Pressing
+  - IncreaseMessage
+  - IncreaseSpeech
   DisableAutoOpenWizard: 1

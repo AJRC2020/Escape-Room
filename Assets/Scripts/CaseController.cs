@@ -31,6 +31,8 @@ public class CaseController : MonoBehaviour
                 {
                     PhotonNetwork.Destroy(locker);
                 }
+
+                PlayDialogue();
             }
         }
 
@@ -56,19 +58,19 @@ public class CaseController : MonoBehaviour
             switch (gameObject.name)
             {
                 case "Case":
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case1", 3f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case1");
                     break;
 
                 case "Case (1)":
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case2", 5f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case2");
                     break;
 
                 case "Case (2)":
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case3", 6f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case3");
                     break;
 
                 case "Case (3)":
-                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case4", 6f);
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "case4");
                     break;
             }
         }

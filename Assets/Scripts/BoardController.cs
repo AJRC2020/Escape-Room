@@ -62,7 +62,7 @@ public class BoardController : MonoBehaviour
 
             if (photonViewDialogue.isMine)
             {
-                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board3", 3f);
+                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board3");
             }
         }
 
@@ -73,7 +73,7 @@ public class BoardController : MonoBehaviour
 
             if (photonViewDialogue.isMine)
             {
-                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board2", 5f);
+                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board2");
             }
         }
     }
@@ -137,7 +137,7 @@ public class BoardController : MonoBehaviour
 
                 if (photonViewDialogue.isMine)
                 {
-                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board1", 8f);
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board1");
                 }
             }
         }
