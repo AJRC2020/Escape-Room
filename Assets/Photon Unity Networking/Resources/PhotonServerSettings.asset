@@ -69,4 +69,7 @@ MonoBehaviour:
   - Pressing
   - IncreaseMessage
   - IncreaseSpeech
+  - ChangeMinigameState
+  - RevealObjects
+  - ChangeState
   DisableAutoOpenWizard: 1

@@ -23,6 +23,9 @@ public class GrabController : MonoBehaviour
     private float senY = 800.0f;
     private bool mouseDown = false;
 
+    private bool smallDialoguePlayed = false;
+    private bool bigDialoguePlayed = false;
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -56,7 +59,7 @@ public class GrabController : MonoBehaviour
                 }
             }
 
-            if (heldDownObj.GetComponent<BoardController>() != null)
+            if (heldDownObj.GetComponent<BoardController>() != null || heldDownObj.GetComponent<OperationTableController>() != null)
             {
                 if (Input.GetMouseButtonUp(0))
                 {
@@ -75,6 +78,13 @@ public class GrabController : MonoBehaviour
                             point.x = gameObject.transform.position.x - 0.01f;
                             photonView.RPC("Draw", PhotonTargets.AllBuffered, point);
                         }
+
+                        if (gameObject.GetComponent<OperationTableController>() != null)
+                        {
+                            Vector3 point = hit.point;
+                            point.y = gameObject.transform.position.y + 0.02f;
+                            photonView.RPC("Draw", PhotonTargets.AllBuffered, point);
+                        }
                     }
                     else
                     {
@@ -90,6 +100,13 @@ public class GrabController : MonoBehaviour
             ZoomObject();
             ChangePageBook();
 
+            if (heldObj.GetComponent<StethoscopeController>() != null)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    heldObj.GetComponent<StethoscopeController>().ChangeState();
+                }
+            }
             if (Input.GetMouseButton(1))
             {
                 RotateObject();
@@ -167,14 +184,21 @@ public class GrabController : MonoBehaviour
             MoveStaticObject();
         }
 
-        if (gameObject.GetComponent<BoardController>() != null)
+        if (gameObject.GetComponent<BoardController>() != null || gameObject.GetComponent<OperationTableController>() != null)
         {
             photonView = gameObject.GetComponent<PhotonView>();
             if (!photonView.isMine)
             {
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
-            DrawObject(gameObject);
+            if (gameObject.GetComponent<BoardController>() != null)
+            {
+                DrawObject(gameObject, true);
+            }
+            else
+            {
+                DrawObject(gameObject, false);
+            }
         }
 
         if (gameObject.GetComponent<HintCardSpawner>() != null)
@@ -190,7 +214,20 @@ public class GrabController : MonoBehaviour
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
             MoveStaticObject();
-            PlayDialogue(gameObject.name);
+            if (!bigDialoguePlayed || !smallDialoguePlayed)
+            {
+                PlayDialogue(gameObject.name);
+            }
+        }
+
+        if (gameObject.GetComponent<OperationRoomButtonController>() != null)
+        {
+            photonView = gameObject.GetComponent<OperationRoomButtonController>().GetPhotonView();
+            if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            OperationMinigame();
         }
 
         if (gameObject.tag == "Key")
@@ -280,7 +317,7 @@ public class GrabController : MonoBehaviour
         //animator.SetBool("isGrabbing", false);
     }
 
-    private void DrawObject(GameObject drawObj)
+    private void DrawObject(GameObject drawObj, bool isBoard)
     {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickupRange))
@@ -288,7 +325,14 @@ public class GrabController : MonoBehaviour
             mouseDown = true;
             heldDownObj = drawObj;
             Vector3 point = hit.point;
-            point.x = drawObj.transform.position.x - 0.01f;
+            if (isBoard)
+            {
+                point.x = drawObj.transform.position.x - 0.01f;
+            }
+            else
+            {
+                point.y = drawObj.transform.position.y + 0.02f;
+            }
             photonView.RPC("Draw", PhotonTargets.AllBuffered, point);
         }
 
@@ -317,6 +361,10 @@ public class GrabController : MonoBehaviour
         photonView.RPC("ButtonPressed", PhotonTargets.AllBuffered);
     }
 
+    private void OperationMinigame()
+    {
+        photonView.RPC("ChangeMinigameState", PhotonTargets.AllBuffered);
+    }
     private void OpenDoor()
     {
         photonView.RPC("OpenDoor", PhotonTargets.AllBuffered);
@@ -336,11 +384,19 @@ public class GrabController : MonoBehaviour
             switch (objName)
             {
                 case "Button Small":
-                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button1");
+                    if (!smallDialoguePlayed)
+                    {
+                        photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button1");
+                        smallDialoguePlayed = true;
+                    }
                     break;
 
                 case "Button Big":
-                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button2");
+                    if (!bigDialoguePlayed)
+                    {
+                        photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button2");
+                        bigDialoguePlayed = true;
+                    }
                     break;
             }
         }
@@ -355,6 +411,15 @@ public class GrabController : MonoBehaviour
 
         heldObj.GetComponent<PhotonView>().enabled = true;
         heldObjRB.transform.parent = null;
+
+        if (heldObj.GetComponent<StethoscopeController>() != null)
+        {
+            StethoscopeController controler = heldObj.GetComponent<StethoscopeController>();
+            if (controler.GetState())
+            {
+                controler.ChangeState();
+            }
+        }
 
         if (isThrow)
         {

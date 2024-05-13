@@ -5,6 +5,11 @@ using UnityEngine;
 public class BreakableWallController : MonoBehaviour
 {
     public float breakVelocity = 10f;
+    public float minHeight = 1.45f;
+    public float maxHeight = 2.05f;
+    public float minWidth = 10.9f;
+    public float maxWidth = 11.5f;
+    public int dialogueLine = 1;
 
     private PhotonView photonView;
 
@@ -28,7 +33,7 @@ public class BreakableWallController : MonoBehaviour
             Vector3 contactPoint = contact.point;
             string tag = collision.gameObject.tag;
 
-            if (contactPoint.y <= 2.05f && contactPoint.y >= 1.45f && contactPoint.z <= 11.5f && contactPoint.z >= 10.9f && tag == "Brick")
+            if (contactPoint.y <= maxHeight && contactPoint.y >= minHeight && contactPoint.z <= maxWidth && contactPoint.z >= minWidth && tag == "Brick")
             {
                 Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
                 float velocity = rb.velocity.magnitude;
@@ -39,9 +44,11 @@ public class BreakableWallController : MonoBehaviour
                 {
                     PhotonView photonView = DialogueManager.Instance.GetPhotonView();
 
+                    string line = "break" + dialogueLine.ToString();
+
                     if (photonView.isMine)
                     {
-                        photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "break1");
+                        photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, line);
                     }
 
                     PhotonNetwork.Destroy(gameObject);
