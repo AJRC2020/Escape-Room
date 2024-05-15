@@ -10,7 +10,6 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI dialogue;
     public float typeSpeed = 0.05f;
     public float extraDuration = 0.5f;
-    public GameObject greenKey;
 
     private Dictionary<string, string> DialogueLines = new Dictionary<string, string>();
     private PhotonView photonView;
@@ -26,6 +25,8 @@ public class DialogueManager : MonoBehaviour
     private bool startSpeech = false;
     private int speechLine = 1;
     private bool inExtraTime = false;
+    private bool finaleOn = false;
+    private bool spawnFinalKey = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -92,6 +93,11 @@ public class DialogueManager : MonoBehaviour
                         photonView.RPC("IncreaseSpeech", PhotonTargets.AllBuffered);
                     }
                 }
+
+                if (finaleOn)
+                {
+                    spawnFinalKey = true;
+                }
             }
         }
     }
@@ -126,12 +132,18 @@ public class DialogueManager : MonoBehaviour
     {
         return startSpeech;
     }
+    
+    public bool SpawnBlueKey()
+    {
+        return spawnFinalKey;
+    }
 
     [PunRPC]
     public void PlayDialogue(string dialogue)
     {
         text = DialogueLines[dialogue];
         duration = extraDuration;
+        inExtraTime = false;
         showing = true;
         childObj.SetActive(true);
         StartCoroutine(TypeDialogue());
@@ -147,6 +159,11 @@ public class DialogueManager : MonoBehaviour
     public void IncreaseSpeech()
     {
         speechLine++;
+    }
+
+    public void StartFinale()
+    {
+        finaleOn = true;
     }
 
     private IEnumerator TypeDialogue()

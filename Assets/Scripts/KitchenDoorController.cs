@@ -6,6 +6,7 @@ public class KitchenDoorController : MonoBehaviour
 {
     public GameObject key;
     public float rotationSpeed = 100f;
+    public bool playDialogue = true;
 
     private bool start = false;
     private float currentRotation = 0.0f;
@@ -45,11 +46,14 @@ public class KitchenDoorController : MonoBehaviour
         {
             start = true;
             
-            PhotonView photonView = DialogueManager.Instance.GetPhotonView();
-
-            if (photonView.isMine)
+            if (playDialogue)
             {
-                photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door2");
+                PhotonView photonView = DialogueManager.Instance.GetPhotonView();
+
+                if (photonView.isMine)
+                {
+                    photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "door2");
+                }
             }
         }
     }

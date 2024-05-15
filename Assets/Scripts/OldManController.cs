@@ -11,9 +11,11 @@ public class OldManController : MonoBehaviour
     public GameObject Stool;
     public GameObject Glasses;
     public GameObject TV;
+    public GameObject blueKey;
     public float cooldownTime = 120f;
     public TimerController timer;
     public float triggerDis = 3f;
+    public OperationTableController operation;
 
     private bool allowFood = false;
     private bool allowStool = false;
@@ -21,6 +23,8 @@ public class OldManController : MonoBehaviour
     private bool allowRemote = false;
     private bool startPuzzle = false;
     private bool proximityChecked = false;
+    private bool coffeeTaken = false;
+    private bool finaleMessage = false;
 
     private List<string> dialogues = new List<string>();
     private float currentTimeOut = 0f;
@@ -59,11 +63,28 @@ public class OldManController : MonoBehaviour
                 currentTimeOut -= Time.deltaTime;
             }
         }
+
+        if (CheckFinale() && !finaleMessage)
+        {
+            PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+            if (photonViewDialogue.isMine)
+            {
+                photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "finale");
+            }
+
+            finaleMessage = true;
+            DialogueManager.Instance.StartFinale();
+        }
+
+        if (DialogueManager.Instance.SpawnBlueKey() && blueKey != null)
+        {
+            blueKey.SetActive(true);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Got here");
         if (collision.gameObject.layer == 3)
         {
             bool delete = false;
@@ -123,6 +144,14 @@ public class OldManController : MonoBehaviour
                     }
                     break;
 
+                case "cup(Clone)":
+                    if (operation.GetState() == 3)
+                    {
+                        coffeeTaken = true;
+                        delete = true;
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -143,6 +172,12 @@ public class OldManController : MonoBehaviour
 
     private void RNGDialogue()
     {
+        if (dialogues.Count == 0)
+        {
+            startPuzzle = false;
+            return;
+        }
+
         int choice = Random.Range(0, dialogues.Count - 1);
 
         PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
@@ -179,7 +214,7 @@ public class OldManController : MonoBehaviour
 
     private bool CheckProximity()
     {
-        PlayerController[] objs = GameObject.FindObjectsOfType<PlayerController>();
+        PlayerController[] objs = FindObjectsOfType<PlayerController>();
 
         foreach (PlayerController obj in objs)
         {
@@ -200,5 +235,10 @@ public class OldManController : MonoBehaviour
     private bool CheckPuzzleStart()
     {
         return DialogueManager.Instance.GetNumberOfLines() == 4;
+    }
+
+    private bool CheckFinale()
+    {
+        return dialogues.Count == 0 && coffeeTaken;
     }
 }

@@ -39,3 +39,6 @@ mixer É isso. Tragam o meu cafézinho depressa... Esperem se eu tomar o meu caf
 speech1 Parabéns por chegarem até aqui. Não estava a espera. Mas agora têm que me tratar. Eu estou doente, por isso espero que me façam todas as vontades.
 speech2 Vou precisar que me façam o meu remédio. A receita está na cozinha, mas vão precisar de algo neste quarto para saber a receita.
 speech3 Aiaiaiai... Estou tão mal. Podem praticar ali ao lado a operação. Ai... Estou mesmo mal, ai de mim.
+cut Ai meu deus... Cuidado com o que fazes.
+operation Okokokokok... Estou a sentir-me muito melhor do nada. Já não precisam de me fazer a operação, Ufffff. Tragam-me só o meu café, q-q-q-q-quer dizer o meu remédio.
+finale Aaaaaaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhhh, que boa caneca de café. Obrigado por me fazerem companhia, podem pegar na chave que vai magicamente aparecer em cima da comeda. Despachem-se antes que o gás venha.

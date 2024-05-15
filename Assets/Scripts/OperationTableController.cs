@@ -28,6 +28,8 @@ public class OperationTableController : MonoBehaviour
     private Vector3 originalPos;
     private LineRenderer lineRenderer;
     private Vector3 prePos;
+    private bool dialoguePlayed = false;
+    private bool cutDialogue = false;
 
     // Start is called before the first frame update
     void Start()
@@ -71,7 +73,17 @@ public class OperationTableController : MonoBehaviour
                     break;
 
                 case 3:
-                    //dialogue
+                    if (!dialoguePlayed)
+                    {
+                        PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+                        if (photonViewDialogue.isMine)
+                        {
+                            photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "operation");
+                        }
+
+                        dialoguePlayed = true;
+                    }
                     break;
             }
         }
@@ -80,10 +92,13 @@ public class OperationTableController : MonoBehaviour
     [PunRPC]
     public void ChangeMinigameState()
     {
-        isPlaying = !isPlaying;
-        if (state == 0)
+        if (stethoscope.GetActive() && knife.GetActive() && pincers.GetActive())
         {
-            controlPanel.SetActive(true);
+            isPlaying = !isPlaying;
+            if (state == 0)
+            {
+                controlPanel.SetActive(true);
+            }
         }
     }
 
@@ -132,6 +147,11 @@ public class OperationTableController : MonoBehaviour
     public void SetContactPoint(Vector3 point)
     {
         contactPoint = point;
+    }
+
+    public int GetState()
+    {
+        return state;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -232,7 +252,7 @@ public class OperationTableController : MonoBehaviour
             }
         }
 
-        if (totalLength > 0.2f)
+        if (totalLength >= 0.2f && totalLength <= 0.5f)
         {
             if (stop)
             {
@@ -242,6 +262,18 @@ public class OperationTableController : MonoBehaviour
             {
                 PhotonView photonViewTimer = timer.GetPhotonView();
                 photonViewTimer.RPC("Penalty", PhotonTargets.AllBuffered, 1);
+
+                if (!cutDialogue)
+                {
+                    PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
+
+                    if (photonViewDialogue.isMine)
+                    {
+                        photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "cut");
+                    }
+
+                    cutDialogue = true;
+                }
             }
         }
     }
