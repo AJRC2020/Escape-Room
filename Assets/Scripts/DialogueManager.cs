@@ -14,6 +14,7 @@ public class DialogueManager : MonoBehaviour
     private Dictionary<string, string> DialogueLines = new Dictionary<string, string>();
     private PhotonView photonView;
     private GameObject childObj;
+    private Queue<string> linesInWaiting = new Queue<string>();
 
     private float duration = 0.0f;
     private bool showing = false;
@@ -98,6 +99,11 @@ public class DialogueManager : MonoBehaviour
                 {
                     spawnFinalKey = true;
                 }
+
+                if (linesInWaiting.Count > 0)
+                {
+                    PlayDialogue(linesInWaiting.Dequeue());
+                }
             }
         }
     }
@@ -141,12 +147,19 @@ public class DialogueManager : MonoBehaviour
     [PunRPC]
     public void PlayDialogue(string dialogue)
     {
-        text = DialogueLines[dialogue];
-        duration = extraDuration;
-        inExtraTime = false;
-        showing = true;
-        childObj.SetActive(true);
-        StartCoroutine(TypeDialogue());
+        if (showing)
+        {
+            linesInWaiting.Enqueue(dialogue);
+        }
+        else
+        {
+            text = DialogueLines[dialogue];
+            duration = extraDuration;
+            inExtraTime = false;
+            showing = true;
+            childObj.SetActive(true);
+            StartCoroutine(TypeDialogue());
+        }
     }
 
     [PunRPC]

@@ -42,6 +42,8 @@ public class TimerController : MonoBehaviour
                 {
                     photonView.RPC("Decrease", PhotonTargets.AllBuffered);
                 }
+
+                PlayDialogue();
             }
             else
             {
@@ -61,8 +63,6 @@ public class TimerController : MonoBehaviour
         {
             IncreaseFog();
         }
-
-        PlayDialogue();
     }
 
     public PhotonView GetPhotonView()

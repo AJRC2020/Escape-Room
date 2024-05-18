@@ -33,14 +33,14 @@ public class BookController : MonoBehaviour
             Check();
         }
 
-        if (!notLocked && isUsingLocker)
-        {
-            CheckLocker();
-        }
-
         if (notLocked)
         {
             ControlPagesOnIndex(currentIndex);
+        }
+
+        if (!notLocked && isUsingLocker)
+        {
+            CheckLocker();
         }
     }
 
@@ -249,8 +249,8 @@ public class BookController : MonoBehaviour
     {
         if (locker == null)
         {
-            notLocked = true;
             Destroy(transform.GetChild(transform.childCount - 1).gameObject);
+            notLocked = true;
         }
     }
 }
