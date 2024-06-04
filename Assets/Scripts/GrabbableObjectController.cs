@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class GrabbableObjectController : MonoBehaviour
 {
+    private Transform follow;
+
+    private void Update()
+    {
+        if (follow != null)
+        {
+            transform.position = follow.position;
+            transform.rotation = follow.rotation;
+        }   
+    }
+
+    public void SetFollow(Transform Follower)
+    {
+        follow = Follower;
+    }
+
     [PunRPC]
     public void UpdateGrabbedObject(Vector3 pos, Quaternion rot)
     {
@@ -14,10 +30,11 @@ public class GrabbableObjectController : MonoBehaviour
     [PunRPC]
     public void SetUpObject()
     {
-        GetComponent<PhotonTransformView>().enabled = false;
+        //GetComponent<PhotonTransformView>().enabled = false;
         Rigidbody heldObjRB = GetComponent<Rigidbody>();
         heldObjRB.useGravity = false;
         heldObjRB.drag = 10;
+        heldObjRB.isKinematic = true;
         gameObject.layer = 0;
     }
 
@@ -40,9 +57,10 @@ public class GrabbableObjectController : MonoBehaviour
     [PunRPC]
     public void DropDownObject()
     {
-        GetComponent<PhotonTransformView>().enabled = true;
+        //GetComponent<PhotonTransformView>().enabled = true;
         Rigidbody heldObjRB = GetComponent<Rigidbody>();
         heldObjRB.useGravity = true;
+        heldObjRB.isKinematic = false;
         heldObjRB.drag = 1;
         gameObject.layer = 3;
     }

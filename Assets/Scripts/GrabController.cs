@@ -121,7 +121,7 @@ public class GrabController : MonoBehaviour
                 cameraController.enabled = true;
             }
 
-            photonView.RPC("UpdateGrabbedObject", PhotonTargets.OthersBuffered, heldObj.transform.position, heldObj.transform.rotation);
+            //photonView.RPC("UpdateGrabbedObject", PhotonTargets.OthersBuffered, heldObj.transform.position, heldObj.transform.rotation);
         }
     }
 
@@ -287,9 +287,13 @@ public class GrabController : MonoBehaviour
         pickObj.layer = 0;
         heldObjRB.constraints = RigidbodyConstraints.FreezeRotation;
 
-        heldObjRB.transform.parent = HoldArea;
+        GrabbableObjectController goc = pickObj.GetComponent<GrabbableObjectController>();
+
+        goc.SetFollow(HoldArea);
+
+        //heldObjRB.transform.parent = HoldArea;
         heldObj = pickObj;
-        heldObj.GetComponent<PhotonView>().enabled = false;
+        //heldObj.GetComponent<PhotonView>().enabled = false;
 
         //animator.SetBool("isGrabbing", true);
 
@@ -409,8 +413,8 @@ public class GrabController : MonoBehaviour
         heldObj.layer = 3;
         heldObjRB.constraints = RigidbodyConstraints.None;
 
-        heldObj.GetComponent<PhotonView>().enabled = true;
-        heldObjRB.transform.parent = null;
+        /*heldObj.GetComponent<PhotonView>().enabled = true;
+        heldObjRB.transform.parent = null;*/
 
         if (heldObj.GetComponent<StethoscopeController>() != null)
         {
@@ -427,11 +431,14 @@ public class GrabController : MonoBehaviour
             heldObjRB.AddForce(force * forceIntensity, ForceMode.Impulse);
         }
 
+        GrabbableObjectController goc = heldObj.GetComponent<GrabbableObjectController>();
+        goc.SetFollow(null);
         heldObj = null;
 
         //animator.SetBool("isGrabbing", false);
 
         HoldArea.localPosition = new Vector3(0, 0.5f, 3.5f);
+        HoldArea.localEulerAngles = Vector3.zero;
 
         photonView.RPC("DropDownObject", PhotonTargets.OthersBuffered);
     }
@@ -444,8 +451,8 @@ public class GrabController : MonoBehaviour
         float mouseX = Input.GetAxisRaw("Mouse X") * senX * Time.deltaTime;
         float mouseY = Input.GetAxisRaw("Mouse Y") * senY * Time.deltaTime;
 
-        heldObj.transform.Rotate(Vector3.down, mouseX);
-        heldObj.transform.Rotate(Vector3.right, mouseY);
+        HoldArea.transform.Rotate(Vector3.down, mouseX);
+        HoldArea.transform.Rotate(Vector3.right, mouseY);
     }
 
     private void ZoomObject()

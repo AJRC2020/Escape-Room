@@ -43,7 +43,7 @@ public class MoveObjectController : MonoBehaviour
     // Update is called once per frame
     protected void Update()
     {
-        MoveObject();   
+        MoveObject();
     }
 
     [PunRPC]

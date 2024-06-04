@@ -119,6 +119,20 @@ public class BookController : MonoBehaviour
                 currentRotating.localEulerAngles = new Vector3(currentRotating.localEulerAngles.x, currentRotating.localEulerAngles.y, 180);
                 canMove = false;
 
+                float x = -1.0f;
+                float y = 0.0f;
+
+                if (currentIndex == transform.childCount - 1)
+                {
+                    y = 0.2f;
+                }
+                else if (currentIndex != 0)
+                {
+                    y = 0.1f;
+                }
+
+                currentRotating.localPosition = new Vector3(x, y, 0);
+
                 if (currentIndex + 1 == transform.childCount)
                 {
                     cantMoveRight = true;
@@ -136,6 +150,20 @@ public class BookController : MonoBehaviour
             {
                 currentRotating.localEulerAngles = new Vector3(currentRotating.localEulerAngles.x, currentRotating.localEulerAngles.y, 0);
                 canMove = false;
+
+                float x = .0f;
+                float y = 0.0f;
+
+                if (currentIndex == 0)
+                {
+                    y = 0.2f;
+                }
+                else if (currentIndex != transform.childCount - 1)
+                {
+                    y = 0.1f;
+                }
+
+                currentRotating.localPosition = new Vector3(x, y, 0);
 
                 if (currentIndex == 0)
                 {

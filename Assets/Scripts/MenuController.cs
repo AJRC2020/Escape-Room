@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
@@ -111,6 +112,17 @@ public class MenuController : MonoBehaviour
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 9;
         PhotonNetwork.JoinOrCreateRoom(RoomInput.text, roomOptions, TypedLobby.Default);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    public void Credits()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("Credits");
     }
 
     private void OnJoinedRoom()

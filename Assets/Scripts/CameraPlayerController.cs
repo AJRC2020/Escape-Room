@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraPlayerController : MonoBehaviour
 {
@@ -57,5 +58,11 @@ public class CameraPlayerController : MonoBehaviour
         {
             frozen = DialogueManager.Instance.GetNumberOfMessage() < 4;
         }
+    }
+
+    public void ChangeSen(float sensability)
+    {
+        senX = sensability;
+        senY = sensability;
     }
 }

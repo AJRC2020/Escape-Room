@@ -14,16 +14,16 @@ public class GameOverController : MonoBehaviour
     {
         if (DataTransfer.Instance.success)
         {
-            result.text = "Success";
+            result.text = "Sucesso";
 
             string timeTaken = DataTransfer.Instance.time;
-            string timePhrase = "Completed the escape room in " + timeTaken + "!";
+            string timePhrase = "Completou a escape room em " + timeTaken + "!";
             time.text = timePhrase;
         }
         else
         {
-            result.text = "Failure";
-            time.text = "Better luck next time!";
+            result.text = "Falhanço";
+            time.text = "Melhor sorte para a próxima!";
         }
 
         Cursor.lockState = CursorLockMode.None;
