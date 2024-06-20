@@ -65,6 +65,8 @@ public class FridgeController : MonoBehaviour
             }
         }
 
+        CheckLock();
+
         if (startRotation)
         {
             childTrans.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
@@ -96,5 +98,15 @@ public class FridgeController : MonoBehaviour
     private void ActivatePanel(int index)
     {
         panels[index].GetChild(0).gameObject.SetActive(true);
+    }
+
+    private void CheckLock()
+    {
+        if (locker == null && !kill)
+        {
+            ActivatePanel(4);
+            startRotation = true;
+            kill = true;
+        }
     }
 }

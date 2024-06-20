@@ -28,6 +28,7 @@ public class OldManController : MonoBehaviour
 
     private List<string> dialogues = new List<string>();
     private float currentTimeOut = 0f;
+    private PhotonView photonViewOldMan;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,7 @@ public class OldManController : MonoBehaviour
         dialogues.Add("requestStool");
         dialogues.Add("requestRemote");
         dialogues.Add("requestGlasses");
+        photonViewOldMan = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -56,13 +58,23 @@ public class OldManController : MonoBehaviour
         {
             if (currentTimeOut <= 0.0f)
             {
-                RNGDialogue();
+                if (photonViewOldMan.isMine)
+                {
+                    RNGDialogue();
+                }
+
+                foreach(string dialogue in dialogues)
+                {
+                    Debug.Log(dialogue);
+                }
             }
             else
             {
                 currentTimeOut -= Time.deltaTime;
             }
         }
+
+        CheckDelete();
 
         if (CheckFinale() && !finaleMessage)
         {
@@ -131,7 +143,11 @@ public class OldManController : MonoBehaviour
                     if (allowStool)
                     {
                         Stool.SetActive(true);
-                        dialogues.Add("requestFood");
+                        if (!photonViewOldMan.isMine)
+                        {
+                            photonViewOldMan.TransferOwnership(PhotonNetwork.player);
+                        }
+                        photonViewOldMan.RPC("AddFood", PhotonTargets.AllBuffered);
                         delete = true;
                     }
                     break;
@@ -147,7 +163,11 @@ public class OldManController : MonoBehaviour
                 case "cup(Clone)":
                     if (operation.GetState() == 3)
                     {
-                        coffeeTaken = true;
+                        if (!photonViewOldMan.isMine)
+                        {
+                            photonViewOldMan.TransferOwnership(PhotonNetwork.player);   
+                        }
+                        photonViewOldMan.RPC("CoffeeDeleted", PhotonTargets.AllBuffered);
                         delete = true;
                     }
                     break;
@@ -182,10 +202,7 @@ public class OldManController : MonoBehaviour
 
         PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
 
-        if (photonViewDialogue.isMine)
-        {
-            photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, dialogues[choice]);
-        }
+        photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, dialogues[choice]);
 
         switch(dialogues[choice])
         {
@@ -207,9 +224,11 @@ public class OldManController : MonoBehaviour
 
         }
 
+        photonViewOldMan.RPC("Allow", PhotonTargets.OthersBuffered, dialogues[choice]);
+
         dialogues.RemoveAt(choice);
         timer.IncreaseStage();
-        currentTimeOut = cooldownTime;
+        photonViewOldMan.RPC("ResetTimeOut", PhotonTargets.AllBuffered);
     }
 
     private bool CheckProximity()
@@ -239,6 +258,90 @@ public class OldManController : MonoBehaviour
 
     private bool CheckFinale()
     {
-        return dialogues.Count == 0 && coffeeTaken;
+        Debug.Log("Coffee = " + coffeeTaken);
+
+        Debug.Log("Other = " + CheckAllActivated());
+
+        return CheckAllActivated() && coffeeTaken;
+    }
+
+    private void CheckDelete()
+    {
+        if (GameObject.Find("pizza") == null && !Pizza.GetActive())
+        {
+            Pizza.SetActive(true);
+        }
+        if (GameObject.Find("muffin") == null && !Muffin.GetActive())
+        {
+            Muffin.SetActive(true);
+        }
+        if (GameObject.Find("cocktail") == null && !Cocktail.GetActive())
+        {
+            Cocktail.SetActive(true);
+        }
+        if (GameObject.Find("remote") == null && !TV.GetActive())
+        {
+            TV.SetActive(true);
+        }
+        if (GameObject.Find("Stool") == null && !Stool.GetActive())
+        {
+            Stool.SetActive(true);
+        }
+        if (GameObject.Find("Glasses") == null && !Glasses.GetActive())
+        {
+            Glasses.SetActive(true);
+        }
+    }
+
+    private bool CheckAllActivated()
+    {
+        return Pizza.GetActive() && Cocktail.GetActive() && Muffin.GetActive() && TV.GetActive() && Stool.GetActive() && Glasses.GetActive();
+    }
+
+    [PunRPC]
+    public void Allow(string dialogue)
+    {
+        switch (dialogue)
+        {
+            case "requestStool":
+                allowStool = true;
+                break;
+
+            case "requestRemote":
+                allowRemote = true;
+                break;
+
+            case "requestGlasses":
+                allowGlasses = true;
+                break;
+
+            case "requestFood":
+                allowFood = true;
+                break;
+
+        }
+
+        dialogues.Remove(dialogue);
+    }
+
+    [PunRPC]
+    public void CoffeeDeleted()
+    {
+        coffeeTaken = true;
+    }
+
+    [PunRPC]
+    public void AddFood()
+    {
+        if (!dialogues.Contains("requestFood"))
+        {
+            dialogues.Add("requestFood");
+        }
+    }
+
+    [PunRPC]
+    public void ResetTimeOut()
+    {
+        currentTimeOut = cooldownTime;
     }
 }

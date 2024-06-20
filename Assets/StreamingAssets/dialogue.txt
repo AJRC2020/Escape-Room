@@ -1,0 +1,44 @@
+start1 Bem-vindos à minha casa. Hoje vamos jogar um pequeno jogo. Estava aborrecido e precisava de algo para me divertir. HOHOHOHOHOHO!!!
+start2 Têm 1 hora para escapar da minha casa, ou vão sentir o gostinho de um veneno. Para sair, precisam resolver os enigmas e chegar ao meu quarto para obter a chave.
+start3 A porta de saída está no fim do corredor. Será que conseguem sair a tempo ou vão adormecer com o gás? O suspense é de matar. HOHOHOHOHOHO!!!
+door1 Aqui é onde criei tantas obras-primas ... e chorei quando queria que ninguém me ouvisse.
+door2 Adoro comer. Pena que os cozinheiros desistem sempre quando os prendo em casa. Já não se fazem trabalhadores como antigamente.
+door3 Hm... Sorte de principiante, acho eu.
+break1 Vocês partem coisas na vossa casa também?
+break2 Partir coisas na casa dos outros? Vou fazer uma queixa.
+rug Nunca mandei consertar esse buraco no chão. Não me pergunte de onde veio.
+counter Não podes levar nada. Vou chamar a polícia, cuidado.
+scale Nunca percebi porque comprei uma balança que mostra calorias em vez do peso.
+fridge Parabéns, talvez consigas terminar antes que o gás venha. HOHOHOHOHO!!!
+case1 Um exercício de matemática é sempre bom.
+case2 Pareço mais um 24.6 com pernas de 23.675 e um braço de 23.12345.
+case3 Não me lembro o que recebi este ano ... Ah, compro algo para mim depois. Despachem-se.
+case4 Tenho tantas saudades da minha mãe ... Deveria visitá-la na casa dela nas Maldivas.
+button1 Sempre adorei uma boa passagem secreta.
+button2 Tenho que me repetir, adoro passagens secretas. HOHOHOHOHO!
+board1 Adoro sopas de letras. Tipo aquelas com letrinhas de massa. Como-as desde criança. HOHOHOHOHO!!!
+board2 Meio caminho andado. Força. Vão precisar. HOHOHOHOHO!!!
+board3 Ok, talvez sejam melhores do que eu esperava.
+association1 A tecnologia moderna permite fazer muitas coisas.
+association2 Impossível! Como conseguiram decifrar às páginas do meu diário!!
+hint1 Puff, apareceu como por magia.
+hint2 Verde sempre foi uma das minhas cores favoritas.
+hint3 O meu filho era fã do Porto. Pergunto-me como ele está agora...
+timer1 15 minutinhos já se foram. HOHOHO!! Boa sorte, vão precisar.
+timer2 Meia hora de vida restante. HOHOHOHOHO!!!
+timer3 15 minutos até ao fim, é melhor apressarem-se.
+timer4 Últimos 10 minutos. Oh meu deus, até ao fim. Não aguento. O meu coração.
+timer5 5 minutos e um sonho, boa sorte.
+timer6 Ah... acabou. Desistam. É o fim. Preciso de contatar o meu advogado.
+requestFood Ai... Estou quase a desmaiar, preciso de comer. Tragam-me uma pizza e um muffin. Tragam também o cocktail para beber. Rápido!
+requestRemote Ai... Preciso de ver TV para me distrair, vão buscar o comando.
+requestStool Ai... Preciso do banco para colocar a comida. Despachem-se.
+requestGlasses Ai... Não vejo nada sem os meus óculos. Descubram onde os deixei. Preciso para ver a TV.
+case Vão precisar dessa chave para fazerem o meu remédio. Estou a sentir-me mal.
+mixer Isso. Tragam o meu cafezinho depressa... Esperem, se eu tomar o meu café, vocês vão-se embora. Hmmm...
+speech1 Parabéns por chegarem até aqui. Não estava à espera. Mas agora têm que cuidar de mim. Estou doente, por isso espero que me façam todas as vontades.
+speech2 Vou precisar que me façam o meu remédio. A receita está na cozinha, mas vão precisar de algo deste quarto para saber a receita.
+speech3 Ai... Estou tão mal. Podem praticar ali ao lado a operação. Ai... Estou mesmo mal, ai de mim.
+cut Ai meu deus... Cuidado com o que fazem.
+operation Ok, estou a sentir-me muito melhor de repente. Já não precisam de me operar. Uff. Tragam-me só o meu café... quer dizer, o meu remédio.
+finale Ah, que boa caneca de café. Obrigado por me fazerem companhia. Podem pegar a chave que vai aparecer magicamente sobre a mesa. Depressem-se antes que o gás venha.

@@ -64,7 +64,7 @@ public class PanelController : MonoBehaviour
 
     private void CreateList()
     {
-        string filepath = "Assets/Texts/diseases.txt";
+        string filepath = Application.streamingAssetsPath + "/diseases.txt";
 
         foreach (string line in File.ReadLines(filepath))
         {

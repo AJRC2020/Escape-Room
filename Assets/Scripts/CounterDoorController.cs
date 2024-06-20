@@ -20,6 +20,11 @@ public class CounterDoorController : MonoBehaviour
     void Update()
     {
         RotateDoor();
+
+        if (childTrans.localPosition.z > -0.45)
+        {
+            childTrans.localPosition = new Vector3(0, 0, -0.45f);
+        }
     }
 
     [PunRPC]

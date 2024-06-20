@@ -82,9 +82,10 @@ public class AssociationPuzzleController : MonoBehaviour
 
                         PhotonView photonView = DialogueManager.Instance.GetPhotonView();
 
-                        if (photonView.isMine)
+                        if (photonView.isMine && notFound)
                         {
                             photonView.RPC("PlayDialogue", PhotonTargets.AllBuffered, "association1");
+                            notFound = false;
                         }
 
                         break;
@@ -162,7 +163,7 @@ public class AssociationPuzzleController : MonoBehaviour
 
     private void CreateList()
     {
-        string filepath = "Assets/Texts/connections.txt";
+        string filepath = Application.streamingAssetsPath + "/connections.txt";
 
         foreach (string line in File.ReadLines(filepath))
         {

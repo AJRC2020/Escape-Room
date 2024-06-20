@@ -67,7 +67,7 @@ public class ScaleController : MonoBehaviour
 
     private void CreateMap()
     {
-        string filePath = "Assets/Texts/food.txt";
+        string filePath = Application.streamingAssetsPath + "/food.txt";
 
         foreach(string line in File.ReadLines(filePath))
         {

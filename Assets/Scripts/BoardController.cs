@@ -14,6 +14,8 @@ public class BoardController : MonoBehaviour
     [SerializeField]
     private float offset = 0.25f;
     [SerializeField]
+    private float offset2 = 0.025f;
+    [SerializeField]
     private List<Bounds> bounds = new List<Bounds>();
 
     private LineRenderer lineRenderer;
@@ -23,6 +25,7 @@ public class BoardController : MonoBehaviour
     private bool stop = false;
     private bool notFound = true;
     private bool notFound8 = true;
+    private bool played = false;
 
     // Start is called before the first frame update
     void Start()
@@ -60,9 +63,10 @@ public class BoardController : MonoBehaviour
 
             PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
 
-            if (photonViewDialogue.isMine)
+            if (photonViewDialogue.isMine && !played)
             {
                 photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board3");
+                played = true;
             }
         }
 
@@ -76,6 +80,8 @@ public class BoardController : MonoBehaviour
                 photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "board2");
             }
         }
+
+        ActivatePanels();
     }
 
     [PunRPC]
@@ -128,7 +134,12 @@ public class BoardController : MonoBehaviour
         if (index != -1)
         {
             found[index] = true;
-            ActivateLight(index);
+
+            index = wordToLight[index];
+            int list = index / 5;
+            int listIndex = index % 5;
+
+            ActivateLight(listIndex, list);
 
             if (notFound)
             {
@@ -146,10 +157,10 @@ public class BoardController : MonoBehaviour
     private bool CompareBounds(Bounds bound1, Bounds bound2)
     {
         float dist = Vector3.Distance(bound1.center, bound2.center);
-        float diffZ = Mathf.Abs(bound1.extents.z - bound2.extents.z) / bound1.extents.z;
-        float diffY = Mathf.Abs(bound1.extents.y - bound2.extents.y) / bound1.extents.y;
+        float diffZ = Mathf.Abs(bound1.extents.z - bound2.extents.z);
+        float diffY = Mathf.Abs(bound1.extents.y - bound2.extents.y);
 
-        return dist <= offset && diffZ <= offset && diffY <= offset;
+        return dist <= offset && diffZ <= offset2 && diffY <= offset2;
     }
 
     private Vector3 RotatePoint(Vector3 point, Vector3 center)
@@ -202,7 +213,7 @@ public class BoardController : MonoBehaviour
 
             if (i >= childTrans.childCount - 3)
             {
-                newBound.extents = new Vector3(0, newBound.extents.y * 1.6f, newBound.extents.z * Mathf.Cos(35f * Mathf.Deg2Rad));
+                newBound.extents = new Vector3(0, newBound.extents.y * 1.25f, newBound.extents.z * Mathf.Cos(35f * Mathf.Deg2Rad));
             }
 
             bounds.Add(newBound);
@@ -224,12 +235,33 @@ public class BoardController : MonoBehaviour
         return foundCount;
     }
 
-    private void ActivateLight(int index)
+    private void ActivateLight(int index, int list)
     {
         Transform childTrans = transform.GetChild(1);
 
-        GameObject light = childTrans.GetChild(wordToLight[index]).gameObject;
+        GameObject light = childTrans.GetChild(list).GetChild(index + 1).GetChild(1).gameObject;
 
         light.SetActive(true);
+    }
+
+    private void ActivatePanels()
+    {
+        if (GameObject.Find("Hint Card 1(Clone)"))
+        {
+            transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+            transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+        }
+
+        if (GameObject.Find("Hint Card 2(Clone)"))
+        {
+            transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
+            transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
+        }
+
+        if (GameObject.Find("Hint Card 3(Clone)"))
+        {
+            transform.GetChild(1).GetChild(2).gameObject.SetActive(true);
+            transform.GetChild(2).GetChild(2).gameObject.SetActive(false);
+        }
     }
 }

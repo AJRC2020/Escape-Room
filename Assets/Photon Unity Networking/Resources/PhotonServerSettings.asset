@@ -72,4 +72,10 @@ MonoBehaviour:
   - ChangeMinigameState
   - RevealObjects
   - ChangeState
+  - Allow
+  - UnlockKnife
+  - CoffeeDeleted
+  - AddFood
+  - ResetTimeOut
+  - EndGame
   DisableAutoOpenWizard: 1

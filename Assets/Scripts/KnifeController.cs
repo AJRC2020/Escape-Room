@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class KnifeController : MonoBehaviour
 {
-    private GrabbableObjectController controller;
-    private PhotonView photonView;
     private Rigidbody rb;
+    private PhotonView photonView;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<GrabbableObjectController>();
-        photonView = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody>();
-
-        controller.enabled = false;
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -28,13 +24,17 @@ public class KnifeController : MonoBehaviour
     {
         if (collision.gameObject.name == "butter" && collision.gameObject.layer == 3)
         {
-            if (photonView.isMine)
-            {
-                PhotonNetwork.Destroy(collision.gameObject);
-            }
+            PhotonNetwork.Destroy(collision.gameObject);
 
-            rb.constraints = RigidbodyConstraints.None;
-            controller.enabled = true;
+            photonView.RPC("UnlockKnife", PhotonTargets.AllBuffered);
         }
+    }
+
+    [PunRPC]
+    public void UnlockKnife()
+    {
+        rb.constraints = RigidbodyConstraints.None;
+        gameObject.AddComponent<GrabbableObjectController>();
+        gameObject.layer = 3;
     }
 }

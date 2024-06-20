@@ -32,7 +32,7 @@ public class BookController : MonoBehaviour
             RotateBook();
             Check();
         }
-
+        
         if (notLocked)
         {
             ControlPagesOnIndex(currentIndex);
@@ -41,6 +41,11 @@ public class BookController : MonoBehaviour
         if (!notLocked && isUsingLocker)
         {
             CheckLocker();
+        }
+
+        if (notLocked && !canMove)
+        {
+            CorrectBook();
         }
     }
 
@@ -279,6 +284,51 @@ public class BookController : MonoBehaviour
         {
             Destroy(transform.GetChild(transform.childCount - 1).gameObject);
             notLocked = true;
+        }
+    }
+
+    private void CorrectBook()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+
+            Vector3 posChild = child.localPosition;
+            float rotation = child.localEulerAngles.z;
+
+            if (posChild.z != 0)
+            {
+                if (rotation == 0)
+                {
+                    if (i == 0)
+                    {
+                        child.localPosition = new Vector3(0f, 0.2f, 0f);
+                    }
+                    else if (i == transform.childCount - 1)
+                    {
+                        child.localPosition = Vector3.zero;
+                    }
+                    else
+                    {
+                        child.localPosition = new Vector3(0f, 0.1f, 0f);
+                    }
+                }
+                else
+                {
+                    if (i == 0)
+                    {
+                        child.localPosition = new Vector3(-1f, 0f, 0f);
+                    }
+                    else if (i == transform.childCount - 1)
+                    {
+                        child.localPosition = new Vector3(-1f, 0.2f, 0f);
+                    }
+                    else
+                    {
+                        child.localPosition = new Vector3(-1f, 0.1f, 0f);
+                    }
+                }
+            }
         }
     }
 }

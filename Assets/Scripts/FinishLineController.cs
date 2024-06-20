@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,13 +20,11 @@ public class FinishLineController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerCount == DataTransfer.Instance.players)
+        Debug.Log("Player = " + playerCount);
+
+        if (playerCount == DataTransfer.Instance.players && photonView.isMine)
         {
-            playerCount++;
-            DataTransfer.Instance.success = true;
-            DataTransfer.Instance.time = timer.GetTimeTaken();
-            PhotonNetwork.Disconnect();
-            SceneManager.LoadScene("GameOver");
+            photonView.RPC("EndGame", PhotonTargets.AllBuffered);
         }
     }
 
@@ -33,6 +32,12 @@ public class FinishLineController : MonoBehaviour
     {
         if (other.gameObject.GetComponent<PlayerController>() != null)
         {
+            /*if (!photonView.isMine)
+            {
+                photonView.TransferOwnership(PhotonNetwork.player);
+            }
+            photonView.RPC("AddPlayer", PhotonTargets.AllBuffered);*/
+
             if (photonView.isMine)
             {
                 photonView.RPC("AddPlayer", PhotonTargets.AllBuffered);
@@ -44,5 +49,23 @@ public class FinishLineController : MonoBehaviour
     public void AddPlayer()
     {
         playerCount++;
+    }
+
+    [PunRPC]
+    public void EndGame()
+    {
+        DataTransfer.Instance.success = true;
+        DataTransfer.Instance.time = timer.GetTimeTaken();
+        StartCoroutine(EndGameCoroutine());
+
+    }
+
+    private IEnumerator EndGameCoroutine()
+    {
+        // Give some time for the RPC to be sent and processed
+        yield return new WaitForSeconds(0.5f);
+
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("GameOver");
     }
 }

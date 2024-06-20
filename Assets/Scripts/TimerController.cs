@@ -55,7 +55,6 @@ public class TimerController : MonoBehaviour
                 DataTransfer.Instance.success = false;
                 PhotonNetwork.Disconnect();
                 SceneManager.LoadScene("GameOver");
-                Debug.Log("Game Over");
             }
         }
 

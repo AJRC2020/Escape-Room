@@ -29,6 +29,9 @@ public class DialogueManager : MonoBehaviour
     private bool finaleOn = false;
     private bool spawnFinalKey = false;
 
+    private bool smallDialoguePlayed = false;
+    private bool bigDialoguePlayed = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -74,7 +77,7 @@ public class DialogueManager : MonoBehaviour
         {
             duration -= Time.deltaTime;
 
-            if (duration < 0.0f)
+            if (Input.GetKeyDown(KeyCode.Space) || duration < 0.0f)
             {
                 showing = false;
                 inExtraTime = false;
@@ -144,6 +147,16 @@ public class DialogueManager : MonoBehaviour
         return spawnFinalKey;
     }
 
+    public bool GetSmallDialogue()
+    {
+        return smallDialoguePlayed;
+    }
+
+    public bool GetBigDialogue() 
+    {
+        return bigDialoguePlayed;
+    }
+
     [PunRPC]
     public void PlayDialogue(string dialogue)
     {
@@ -159,6 +172,15 @@ public class DialogueManager : MonoBehaviour
             showing = true;
             childObj.SetActive(true);
             StartCoroutine(TypeDialogue());
+        }
+
+        if (dialogue == "button1")
+        {
+            smallDialoguePlayed = true;
+        }
+        if (dialogue == "button2")
+        {
+            bigDialoguePlayed= true;
         }
     }
 
@@ -183,11 +205,28 @@ public class DialogueManager : MonoBehaviour
     {
         for (int i = 0; i <= text.Length; i++)
         {
-            string displayText = text.Substring(0, i);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                dialogue.text = text;
+                inExtraTime = true;
+                yield break;
+            }
 
+            string displayText = text.Substring(0, i);
             dialogue.text = displayText;
 
-            yield return new WaitForSeconds(typeSpeed);
+            float elapsedTime = 0f;
+            while (elapsedTime < typeSpeed)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    dialogue.text = text;
+                    inExtraTime = true;
+                    yield break;
+                }
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
         }
 
         inExtraTime = true;
@@ -195,7 +234,8 @@ public class DialogueManager : MonoBehaviour
 
     private void GetDialogue()
     {
-        string filepath = "Assets/Texts/dialogue.txt";
+        string filepath = Application.streamingAssetsPath + "/dialogue.txt";
+
 
         foreach (string line in File.ReadAllLines(filepath))
         {

@@ -23,9 +23,6 @@ public class GrabController : MonoBehaviour
     private float senY = 800.0f;
     private bool mouseDown = false;
 
-    private bool smallDialoguePlayed = false;
-    private bool bigDialoguePlayed = false;
-
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -214,7 +211,7 @@ public class GrabController : MonoBehaviour
                 photonView.TransferOwnership(PhotonNetwork.player);
             }
             MoveStaticObject();
-            if (!bigDialoguePlayed || !smallDialoguePlayed)
+            if (!DialogueManager.Instance.GetBigDialogue() || !DialogueManager.Instance.GetSmallDialogue())
             {
                 PlayDialogue(gameObject.name);
             }
@@ -383,27 +380,27 @@ public class GrabController : MonoBehaviour
     {
         PhotonView photonViewDialogue = DialogueManager.Instance.GetPhotonView();
 
-        if (photonViewDialogue.isMine)
+        if (!photonViewDialogue.isMine)
         {
-            switch (objName)
-            {
-                case "Button Small":
-                    if (!smallDialoguePlayed)
-                    {
-                        photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button1");
-                        smallDialoguePlayed = true;
-                    }
-                    break;
-
-                case "Button Big":
-                    if (!bigDialoguePlayed)
-                    {
-                        photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button2");
-                        bigDialoguePlayed = true;
-                    }
-                    break;
-            }
+            photonViewDialogue.TransferOwnership(PhotonNetwork.player);
         }
+
+        switch (objName)
+        {
+            case "Button Small":
+                if (!DialogueManager.Instance.GetSmallDialogue())
+                {
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button1");
+                }
+                break;
+
+            case "Button Big":
+                if (!DialogueManager.Instance.GetBigDialogue())
+                {
+                    photonViewDialogue.RPC("PlayDialogue", PhotonTargets.AllBuffered, "button2");
+                }
+                break;
+            }
     }
 
     private void DropObject(bool isThrow)

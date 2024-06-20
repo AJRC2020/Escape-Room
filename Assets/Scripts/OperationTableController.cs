@@ -42,6 +42,8 @@ public class OperationTableController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckDeleted();
+
         if (isPlaying)
         {
             switch (state)
@@ -51,8 +53,6 @@ public class OperationTableController : MonoBehaviour
                     if (CheckFoundAilment())
                     {
                         photonView.RPC("ChangeState", PhotonTargets.AllBuffered, 1);
-                        stop = false;
-                        controlPanel.SetActive(false);
                         photonView.RPC("RevealObjects", PhotonTargets.AllBuffered, true);
                     }
                     break;
@@ -87,6 +87,8 @@ public class OperationTableController : MonoBehaviour
                     break;
             }
         }
+
+        Debug.Log("state = " + state);
     }
 
     [PunRPC]
@@ -119,6 +121,11 @@ public class OperationTableController : MonoBehaviour
     [PunRPC]
     public void ChangeState(int state)
     {
+        if (state == 1)
+        {
+            controlPanel.SetActive(false);
+            stop = false;
+        }
         this.state = state;
     }
 
@@ -159,31 +166,31 @@ public class OperationTableController : MonoBehaviour
         if (collision.gameObject.name == "Stethoscope" && pincers.GetActive() && collision.gameObject.layer == 3)
         {
             stethoscope.SetActive(true);
-
-            if (photonView.isMine)
+            PhotonNetwork.Destroy(collision.gameObject);
+            /*if (photonView.isMine)
             {
                 PhotonNetwork.Destroy(collision.gameObject);
-            }
+            }*/
         }
 
         if (collision.gameObject.name == "Knife" && collision.gameObject.layer == 3)
         {
             knife.SetActive(true);
-
-            if (photonView.isMine)
+            PhotonNetwork.Destroy(collision.gameObject);
+            /*if (photonView.isMine)
             {
                 PhotonNetwork.Destroy(collision.gameObject);
-            }
+            }*/
         }
 
         if (collision.gameObject.name == "Pincers" && collision.gameObject.layer == 3)
         {
             pincers.SetActive(true);
-
-            if (photonView.isMine)
+            PhotonNetwork.Destroy(collision.gameObject);
+            /*if (photonView.isMine)
             {
                 PhotonNetwork.Destroy(collision.gameObject);
-            }
+            }*/
         }
     }
 
@@ -275,6 +282,24 @@ public class OperationTableController : MonoBehaviour
                     cutDialogue = true;
                 }
             }
+        }
+    }
+
+    private void CheckDeleted()
+    {
+        if (GameObject.Find("Stethoscope") == null)
+        {
+            stethoscope.SetActive(true);
+        }
+
+        if (GameObject.Find("Pincers") == null)
+        {
+            pincers.SetActive(true);
+        }
+
+        if (GameObject.Find("Knife") == null)
+        {
+            knife.SetActive(true);
         }
     }
 }

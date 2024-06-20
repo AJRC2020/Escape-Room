@@ -28,11 +28,6 @@ public class RotaryLockController : MonoBehaviour
     {
         UpdateScreen();
         CheckSolution();
-
-        if (currentIndex == 5)
-        {
-            Debug.Log("Lock Unlocked");
-        }
     }
 
     public void IncreaseRotation(PhotonView photonView)
@@ -62,6 +57,11 @@ public class RotaryLockController : MonoBehaviour
         currentRotation = newRotation;
         currentLeft = isLeft;
         isMoving = true;
+    }
+
+    public void AdjustOthers(PhotonView photonView)
+    {
+        photonView.RPC("Pressed", PhotonTargets.OthersBuffered, currentRotation, currentLeft);
     }
 
     public int GetCurrentIndex()

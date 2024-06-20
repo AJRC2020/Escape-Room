@@ -19,6 +19,7 @@ public class FinalLightController : MonoBehaviour
         if (key == null)
         {
             light.intensity = 100;
+            Debug.Log("Got here lights");
         }
     }
 }

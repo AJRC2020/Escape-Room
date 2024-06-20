@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SetMenuController : MonoBehaviour
@@ -79,5 +80,12 @@ public class SetMenuController : MonoBehaviour
     {
         controls.SetActive(false);
         menu.SetActive(true);
+    }
+
+    public void ExitGame()
+    {
+        DataTransfer.Instance.success = false;
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("GameOver");
     }
 }
